@@ -13,7 +13,7 @@ const getUser = async (cookie = '') => {
       }
     : {};
 
-  const response = await fetch('/api/me', headers);
+  const response = await fetch('/api/auth/me', headers);
 
   if (!response.ok) {
     delete window.__user;

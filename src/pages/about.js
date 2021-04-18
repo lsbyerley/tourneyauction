@@ -1,5 +1,7 @@
 import Head from 'next/head';
 import auth0 from '@/lib/auth0';
+import BasicLayout from '@/layouts/BasicLayout';
+// import { useUser } from '@auth0/nextjs-auth0';
 
 export async function getServerSideProps({ req, res }) {
   // Here you can check authentication status directly before rendering the page,
@@ -9,13 +11,13 @@ export async function getServerSideProps({ req, res }) {
 
   if (!session || !session.user) {
     res.writeHead(302, {
-      Location: '/api/login',
+      Location: '/api/auth/login',
     });
     res.end();
     return;
   }
 
-  /*const resp = await fetch('https://hasura-fit.herokuapp.com/v1/graphql', {
+  /* const resp = await fetch('https://hasura-fit.herokuapp.com/v1/graphql', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${session.accessToken}`,
@@ -32,14 +34,19 @@ export async function getServerSideProps({ req, res }) {
         }
       `,
     }),
-  });
+  }); */
 
-  const { data } = await resp.json();
-  return { props: { sessions: data.sessions, user: session.user } }; */
+  // const { data } = await resp.json();
+  // return { props: { sessions: data.sessions, user: session.user } }; //comment back in here for session test
   return { props: { user: session.user } };
 }
 
 export default function About({ user }) {
+  // const { user: testuser, error, isLoading } = useUser();
+
+  console.log('LOG: about user from props', user);
+  // console.log('LOG: about testuser from hook', testuser);
+
   return (
     <div>
       <Head>
@@ -48,8 +55,16 @@ export default function About({ user }) {
       </Head>
 
       <main>
+        <p>The About Page</p>
         <p>{JSON.stringify(user)}</p>
       </main>
     </div>
   );
 }
+
+About.layoutProps = {
+  meta: {
+    title: 'About',
+  },
+  Layout: BasicLayout,
+};

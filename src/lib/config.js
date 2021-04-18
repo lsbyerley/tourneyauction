@@ -33,7 +33,7 @@ if (typeof window === 'undefined') {
     AUTH0_AUDIENCE: process.env.AUTH0_AUDIENCE,
     AUTH0_SCOPE: 'openid profile',
     BASE_URL: baseURLForEnv,
-    CALLBACK_URI: `/api/callback`,
+    CALLBACK_URI: `/api/auth/callback`,
     SESSION_SECRET: process.env.SESSION_SECRET,
     POST_LOGOUT_REDIRECT_URI: `/`,
   };
@@ -44,7 +44,7 @@ if (typeof window === 'undefined') {
     AUTH0_AUDIENCE: process.env.AUTH0_AUDIENCE,
     AUTH0_SCOPE: 'openid profile',
     BASE_URL: baseURLForEnv,
-    CALLBACK_URI: `/api/callback`,
+    CALLBACK_URI: `/api/auth/callback`,
     SESSION_SECRET: process.env.SESSION_SECRET,
     POST_LOGOUT_REDIRECT_URI: window.location.origin,
   };
