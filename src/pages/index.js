@@ -1,66 +1,17 @@
 import Head from 'next/head';
-import Link from 'next/link';
-import Image from 'next/image';
-import { GraphQLClient } from 'graphql-request';
 import BasicLayout from '@/layouts/BasicLayout';
-import { UserAddIcon, MailIcon, PhoneIcon } from '@heroicons/react/solid';
-
-const graphcms = new GraphQLClient(process.env.GRAPHQL_URL_ENDPOINT);
+import { PlusCircleIcon } from '@heroicons/react/solid';
+import getAllAuctions from '@/lib/getAllAuctions';
+import { format } from 'date-fns';
 
 export async function getStaticProps() {
-  const { destinations } = await graphcms.request(
-    `
-    query Destinations() {
-      destinations {
-        id
-        name
-        description
-        image {
-          url
-          width
-          height
-        }
-      }
-    }
-    `
-  );
-
-  const { sports } = await graphcms.request(
-    `
-    query Sports() {
-      sports {
-        name
-        league
-      }
-    }
-    `
-  );
-
-  const { auctions } = await graphcms.request(
-    `
-    query Auctions() {
-      auctions {
-        id
-        createdAt
-        name
-        sport
-        startDate
-        endDate
-      }
-    }
-    `
-  );
+  const { auctions } = await getAllAuctions();
 
   return {
-    props: {
-      destinations,
-      sports,
-      auctions,
-    },
+    props: { auctions },
   };
 }
-
-export default function Home({ destinations, sports, auctions }) {
+export default function Home({ auctions }) {
   return (
     <div>
       <Head>
@@ -83,11 +34,11 @@ export default function Home({ destinations, sports, auctions }) {
                         {auction.name}
                       </h3>
                       <span className='flex-shrink-0 inline-block px-2 py-0.5 text-green-800 text-xs font-medium bg-green-100 rounded-full'>
-                        {auction.sport}
+                        {auction.sport.name}
                       </span>
                     </div>
                     <p className='mt-1 text-sm text-gray-500 truncate'>
-                      {auction.startDate}
+                      {format(new Date(auction.startDate), 'LLL d h:m aaa')}
                     </p>
                   </div>
                   <img
@@ -100,17 +51,17 @@ export default function Home({ destinations, sports, auctions }) {
                   <div className='flex -mt-px divide-x divide-gray-200'>
                     <div className='flex flex-1 w-0'>
                       <a
-                        href='#'
+                        href={`/auction/${auction.id}`}
                         className='relative inline-flex items-center justify-center flex-1 w-0 py-4 -mr-px text-sm font-medium text-gray-700 border border-transparent rounded-bl-lg hover:text-gray-500'
                       >
-                        <MailIcon
+                        <PlusCircleIcon
                           className='w-5 h-5 text-gray-400'
                           aria-hidden='true'
                         />
                         <span className='ml-3'>Join</span>
                       </a>
                     </div>
-                    <div className='flex flex-1 w-0 -ml-px'>
+                    {/* <div className='flex flex-1 w-0 -ml-px'>
                       <a
                         href='#'
                         className='relative inline-flex items-center justify-center flex-1 w-0 py-4 text-sm font-medium text-gray-700 border border-transparent rounded-br-lg hover:text-gray-500'
@@ -121,7 +72,7 @@ export default function Home({ destinations, sports, auctions }) {
                         />
                         <span className='ml-3'>Entry Code</span>
                       </a>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </li>
