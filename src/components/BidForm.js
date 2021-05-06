@@ -1,6 +1,6 @@
 import Form from '@/components/ui/Form';
 import Button from '@/components/ui/Button';
-import CreateAuctionBidQuery from '@/queries/bids';
+import AuctionBidsQuery from '@/queries/bids';
 import { mutate } from 'swr';
 import { useForm } from 'react-hook-form';
 
@@ -9,9 +9,10 @@ const BidForm = ({ auction, player }) => {
 
   const onSubmit = async (data) => {
     console.log('LOG: here submitting bid', data);
-    mutate(
-      [CreateAuctionBidQuery, data],
-      async (/*{ reviews: { aggregate, edges } }*/) => {
+    /* mutate(
+      [AuctionBidsQuery, auction.id],
+      async ({ bids: { aggregate, edges } }) => {
+        console.log('LOG: before createAuctionBid', aggregate, edges);
         try {
           const { bid } = await fetch('/api/graphcms/createAuctionBid', {
             method: 'POST',
@@ -25,19 +26,21 @@ const BidForm = ({ auction, player }) => {
             }),
           }).then((res) => res.json());
 
+          console.log('LOG: after createAuctionBid', bid);
+
           return {
-            bid,
-            /* reviews: {
+            // bid,
+            bids: {
               aggregate: { count: ++aggregate.count },
-              edges: [...edges, { node: review }],
-            }, */
+              edges: [...edges, { node: bid }],
+            },
           };
         } catch (error) {
           console.log(error);
         }
       },
       false
-    );
+    ); */
   };
 
   return (

@@ -30,3 +30,20 @@ export const PublishAuctionBidQuery = gql`
     }
   }
 `;
+
+export const AuctionBidsQuery = gql`
+  query AuctionBidsQuery($auctionId: ID!) {
+    bids: bidsConnection(where: { auction: { id: $auctionId } }) {
+      aggregate {
+        count
+      }
+      edges {
+        node {
+          id
+          userId
+          amount
+        }
+      }
+    }
+  }
+`;

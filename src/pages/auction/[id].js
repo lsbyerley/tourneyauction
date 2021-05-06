@@ -3,9 +3,7 @@ import BasicLayout from '@/layouts/BasicLayout';
 import getAllAuctions from '@/lib/getAllAuctions';
 import getAuctionById from '@/lib/getAuctionById';
 import getPlayersBySportLeague from '@/lib/getPlayersBySportLeague';
-import getBidsByAuctionId, {
-  BidsByAuctionIdQuery,
-} from '@/lib/getBidsByAuctionId';
+import { AuctionBidsQuery } from '@/queries/bids';
 import useSWR from 'swr';
 import graphCMSClient from '@/lib/graphCMSClient';
 import BidForm from '@/components/BidForm';
@@ -15,14 +13,14 @@ const Auction = ({ auction, players }) => {
 
   // TODO: Get all bids by auction on the client side and map to players
   const { data, error } = useSWR(
-    [BidsByAuctionIdQuery, auction.id],
-    (query, id) => {
-      // console.log('LOG: auction bids', query, id);
-      return graphCMSClient.request(query, { id });
+    [AuctionBidsQuery, auction.id],
+    (query, auctionId) => {
+      // console.log('LOG: auction bids', query, auctionId);
+      return graphCMSClient.request(query, { auctionId });
     }
   );
 
-  console.log('BIDS!', data, error);
+  // console.log('BIDS!', data, error);
 
   return (
     <div>
@@ -55,7 +53,7 @@ const Auction = ({ auction, players }) => {
           </div>
         )}
 
-        <p>Total Bids: {data?.bids?.length || 'nobids'}</p>
+        <p>Total Bids: {data?.bids?.aggregate?.count || 'nobids'}</p>
 
         {!players && <p>No Players!</p>}
         {players.length && (
