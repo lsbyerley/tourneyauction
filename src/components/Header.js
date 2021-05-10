@@ -3,14 +3,24 @@ import Link from 'next/link';
 import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
+import clsx from 'clsx';
+import { useRouter } from 'next/router';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
+// example NavItem
+// https://github.com/tailwindlabs/tailwindcss.com/blob/7617a606ee89065144bcfe3e6b35d2938e707c0a/src/layouts/SidebarLayout.js
+
 const Header = ({ user }) => {
   console.log('LOG: header user', user);
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+
+  const isActive = (href) => {
+    return router.pathname === href;
+  };
 
   return (
     <Disclosure as='nav' className='bg-white shadow'>
@@ -33,14 +43,33 @@ const Header = ({ user }) => {
                 </div>
                 <div className='hidden sm:ml-6 sm:flex sm:space-x-8'>
                   {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
-                  <a
-                    href='/'
-                    className='inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-indigo-500'
-                  >
-                    Dashboard
-                  </a>
+                  <Link href='/'>
+                    <a
+                      className={clsx(
+                        'inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2',
+                        {
+                          'border-indigo-500 text-gray-900': isActive('/'),
+                          'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700': !isActive(
+                            '/'
+                          ),
+                        }
+                      )}
+                    >
+                      Dashboard
+                    </a>
+                  </Link>
                   <Link href='/about'>
-                    <a className='inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:border-gray-300 hover:text-gray-700'>
+                    <a
+                      className={clsx(
+                        'inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2',
+                        {
+                          'border-indigo-500 text-gray-900': isActive('/about'),
+                          'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700': !isActive(
+                            '/about'
+                          ),
+                        }
+                      )}
+                    >
                       About
                     </a>
                   </Link>

@@ -7,9 +7,10 @@ import { AuctionBidsQuery } from '@/queries/bids';
 import useSWR from 'swr';
 import graphCMSClient from '@/lib/graphCMSClient';
 import BidForm from '@/components/BidForm';
+import { useUser } from '@auth0/nextjs-auth0';
 
 const Auction = ({ auction, players }) => {
-  console.log('LOG: auction', auction);
+  const { user, error: userError, isLoading } = useUser();
 
   // TODO: Get all bids by auction on the client side and map to players
   const { data, error } = useSWR(
@@ -19,8 +20,6 @@ const Auction = ({ auction, players }) => {
       return graphCMSClient.request(query, { auctionId });
     }
   );
-
-  // console.log('BIDS!', data, error);
 
   return (
     <div>
@@ -78,7 +77,12 @@ const Auction = ({ auction, players }) => {
                   <p className='text-sm text-gray-500 truncate'>{player.id}</p>
                 </div>
                 <div>
-                  <BidForm auction={auction} player={auction} />
+                  {user && <BidForm auction={auction} player={player} />}
+                  {!user && (
+                    <p>
+                      You must <a href='/api/auth/login'>login</a> to bid
+                    </p>
+                  )}
                 </div>
               </div>
             ))}

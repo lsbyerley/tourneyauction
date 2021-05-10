@@ -4,7 +4,6 @@ import { FormProvider, useFormContext } from 'react-hook-form';
 import { ChevronDownSmallIcon } from '@/components/icons';
 
 function Form({ children, methods, onSubmit, ...props }) {
-  // console.log('LOG: Form.js', onSubmit, { ...props });
   return (
     <FormProvider {...methods}>
       <form onSubmit={onSubmit} {...props}>

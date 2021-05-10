@@ -2,17 +2,18 @@ import graphCMSMutationClient from '@/lib/graphCMSMutationClient.js';
 import { CreateAuctionBidQuery, PublishAuctionBidQuery } from '@/queries/bids';
 
 export default async (req, res) => {
-  console.log('LOG: inside createAutionBid', req.body);
   try {
-    const { bid } = await graphCMSMutationClient.request(
+    const { createBid } = await graphCMSMutationClient.request(
       CreateAuctionBidQuery,
-      { data: req.body }
+      {
+        data: req.body,
+      }
     );
 
     const { publishedBid } = await graphCMSMutationClient.request(
       PublishAuctionBidQuery,
       {
-        id: bid.id,
+        id: createBid.id,
       }
     );
 

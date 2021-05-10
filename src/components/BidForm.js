@@ -1,18 +1,18 @@
 import Form from '@/components/ui/Form';
 import Button from '@/components/ui/Button';
-import AuctionBidsQuery from '@/queries/bids';
+import { AuctionBidsQuery } from '@/queries/bids';
 import { mutate } from 'swr';
 import { useForm } from 'react-hook-form';
 
 const BidForm = ({ auction, player }) => {
-  const { handleSubmit, formMethods } = useForm();
+  const { handleSubmit, ...formMethods } = useForm();
 
-  const onSubmit = async (data) => {
-    console.log('LOG: here submitting bid', data);
-    /* mutate(
+  const onSubmit = async (formData) => {
+    mutate(
       [AuctionBidsQuery, auction.id],
       async ({ bids: { aggregate, edges } }) => {
-        console.log('LOG: before createAuctionBid', aggregate, edges);
+        const bidAmount = Number(formData.amount);
+
         try {
           const { bid } = await fetch('/api/graphcms/createAuctionBid', {
             method: 'POST',
@@ -22,14 +22,12 @@ const BidForm = ({ auction, player }) => {
             body: JSON.stringify({
               auction: { connect: { id: auction.id } },
               player: { connect: { id: player.id } },
-              ...data,
+              amount: bidAmount,
+              userId: 'testing1234',
             }),
           }).then((res) => res.json());
 
-          console.log('LOG: after createAuctionBid', bid);
-
           return {
-            // bid,
             bids: {
               aggregate: { count: ++aggregate.count },
               edges: [...edges, { node: bid }],
@@ -40,7 +38,7 @@ const BidForm = ({ auction, player }) => {
         }
       },
       false
-    ); */
+    );
   };
 
   return (
