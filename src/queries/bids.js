@@ -28,6 +28,10 @@ export const PublishAuctionBidQuery = gql`
       auction {
         id
       }
+      player {
+        id
+        name
+      }
     }
   }
 `;
@@ -46,6 +50,10 @@ export const AuctionBidsQuery = gql`
           id
           userId
           amount
+          player {
+            name
+            id
+          }
         }
       }
     }
@@ -58,6 +66,7 @@ export const BidsByAuctionId = gql`
     bids(where: { auction: { id: $auctionId } }) {
       amount
       id
+      userId
       player {
         id
         name

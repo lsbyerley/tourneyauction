@@ -4,41 +4,54 @@ import { AuctionBidsQuery } from '@/queries/bids';
 import { mutate } from 'swr';
 import { useForm } from 'react-hook-form';
 
-const BidForm = ({ auction, player }) => {
+const BidForm = ({ user, auction, player, playerHighestBid }) => {
   const { handleSubmit, ...formMethods } = useForm();
 
   const onSubmit = async (formData) => {
-    mutate(
-      [AuctionBidsQuery, auction.id],
-      async ({ bids: { aggregate, edges } }) => {
-        const bidAmount = Number(formData.amount);
+    try {
+      mutate(
+        [AuctionBidsQuery, auction.id],
+        async ({ bids: { aggregate, edges } }) => {
+          const bidAmount = Number(formData.amount);
 
-        try {
-          const { bid } = await fetch('/api/graphcms/createAuctionBid', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              auction: { connect: { id: auction.id } },
-              player: { connect: { id: player.id } },
-              amount: bidAmount,
-              userId: 'testing1234',
-            }),
-          }).then((res) => res.json());
+          const userId = user.sub.split('|')[1];
 
-          return {
-            bids: {
-              aggregate: { count: ++aggregate.count },
-              edges: [...edges, { node: bid }],
-            },
-          };
-        } catch (error) {
-          console.log(error);
-        }
-      },
-      false
-    );
+          console.log('LOG: userId', userId);
+
+          try {
+            const { bid } = await fetch('/api/graphcms/createAuctionBid', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                auction: { connect: { id: auction.id } },
+                player: { connect: { id: player.id } },
+                amount: bidAmount,
+                userId: userId,
+              }),
+            }).then((res) => res.json());
+
+            console.log('LOG: BidForm created', bid);
+
+            return {
+              bids: {
+                aggregate: { count: ++aggregate.count },
+                edges: [...edges, { node: bid }],
+              },
+            };
+          } catch (error) {
+            console.error('LOG: bid submit failed', error);
+            return {
+              status: 'bid failed',
+            };
+          }
+        },
+        false
+      );
+    } catch (error) {
+      alert('ERROR SUBMITTING BID! toast error', error);
+    }
   };
 
   return (
@@ -47,8 +60,14 @@ const BidForm = ({ auction, player }) => {
       methods={formMethods}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <Form.Input field='amount' type='number'></Form.Input>
-      <Button type='submit'>Submit</Button>
+      <Form.Input
+        field='amount'
+        type='number'
+        step='1'
+        placeholder={playerHighestBid + 1}
+        playerHighestBid={playerHighestBid}
+      ></Form.Input>
+      <Button type='submit'>Place Bid</Button>
     </Form>
   );
 };

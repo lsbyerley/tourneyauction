@@ -8,18 +8,39 @@ import useSWR from 'swr';
 import graphCMSClient from '@/lib/graphCMSClient';
 import BidForm from '@/components/BidForm';
 import { useUser } from '@auth0/nextjs-auth0';
+import { format } from 'date-fns';
+import Countdown from 'react-countdown';
 
 const Auction = ({ auction, players }) => {
   const { user, error: userError, isLoading } = useUser();
 
-  // TODO: Get all bids by auction on the client side and map to players
   const { data, error } = useSWR(
     [AuctionBidsQuery, auction.id],
     (query, auctionId) => {
-      // console.log('LOG: auction bids', query, auctionId);
       return graphCMSClient.request(query, { auctionId });
     }
   );
+
+  const getPlayerHighestBid = (id) => {
+    let highestBid = {};
+    const bids = data?.bids?.edges || [];
+    if (bids && bids.length) {
+      const playerBids = bids
+        .filter((b) => b?.node?.player?.id === id)
+        .sort((a, b) => b?.node?.amount - a?.node?.amount);
+      highestBid = playerBids[0] || {};
+    }
+    return highestBid;
+  };
+
+  const getHighestBidderText = (user, bid) => {
+    console.log('LOG: user highest', user, bid);
+    if (user && bid) {
+      const userId = user.sub.split('|')[1];
+      return userId === bid?.node?.userId ? 'You are winning!' : '';
+    }
+    return '';
+  };
 
   return (
     <div>
@@ -52,42 +73,106 @@ const Auction = ({ auction, players }) => {
           </div>
         )}
 
-        <p>Total Bids: {data?.bids?.aggregate?.count || 'nobids'}</p>
+        <div className='mb-8'>
+          <h3 className='text-lg font-medium leading-6 text-gray-900'>
+            Auction Stats
+          </h3>
+          <dl className='grid grid-cols-1 gap-5 mt-5 sm:grid-cols-4'>
+            <div className='px-4 py-5 overflow-hidden bg-white rounded-lg shadow sm:p-6'>
+              <dt className='text-sm font-medium text-gray-500 truncate'>
+                Total Bids
+              </dt>
+              <dd className='mt-1 text-2xl font-semibold text-gray-900'>
+                {data?.bids?.aggregate?.count || '0'}
+              </dd>
+            </div>
+            <div className='px-4 py-5 overflow-hidden bg-white rounded-lg shadow sm:p-6'>
+              <dt className='text-sm font-medium text-gray-500 truncate'>
+                {'Start Date'}
+              </dt>
+              <dd className='mt-1 text-2xl font-semibold text-gray-900'>
+                {format(new Date(auction.startDate), 'LLL d, h:m aaa')}
+              </dd>
+            </div>
+            <div className='px-4 py-5 overflow-hidden bg-white rounded-lg shadow sm:p-6'>
+              <dt className='text-sm font-medium text-gray-500 truncate'>
+                {'End Date'}
+              </dt>
+              <dd className='mt-1 text-2xl font-semibold text-gray-900'>
+                {format(new Date(auction.endDate), 'LLL d, h:m aaa')}
+              </dd>
+            </div>
+            <div className='px-4 py-5 overflow-hidden bg-white rounded-lg shadow sm:p-6'>
+              <dt className='text-sm font-medium text-gray-500 truncate'>
+                {'Time Left'}
+              </dt>
+              <dd className='mt-1 text-2xl font-semibold text-gray-900'>
+                <Countdown date={auction.endDate} />
+              </dd>
+            </div>
+          </dl>
+        </div>
 
-        {!players && <p>No Players!</p>}
-        {players.length && (
-          <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
-            {players.map((player) => (
-              <div
-                key={player.id}
-                className='relative flex items-center px-6 py-5 space-x-3 bg-white border border-gray-300 rounded-lg shadow-sm'
-              >
-                <div className='flex-shrink-0'>
-                  <img
-                    className='w-10 h-10 rounded-full'
-                    src={player.imageUrl}
-                    alt=''
-                  />
-                </div>
-                <div className='flex-1 min-w-0'>
-                  {/*<span className='absolute inset-0' aria-hidden='true' />*/}
-                  <p className='text-sm font-medium text-gray-900'>
-                    {player.name}
-                  </p>
-                  <p className='text-sm text-gray-500 truncate'>{player.id}</p>
-                </div>
-                <div>
-                  {user && <BidForm auction={auction} player={player} />}
-                  {!user && (
-                    <p>
-                      You must <a href='/api/auth/login'>login</a> to bid
-                    </p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <div className='mb-8'>
+          <h3 className='text-lg font-medium leading-6 text-gray-900'>
+            Player List
+          </h3>
+          {!players && <p>No Players!</p>}
+          {players.length && (
+            <div className='grid grid-cols-1 gap-4 mt-5 sm:grid-cols-2'>
+              {players.map((player) => {
+                const playerHighestBid = getPlayerHighestBid(player.id);
+                return (
+                  <div
+                    key={player.id}
+                    className='relative flex items-center px-6 py-5 space-x-3 bg-white border border-gray-300 rounded-lg shadow-sm'
+                  >
+                    <div className='flex-shrink-0'>
+                      <img
+                        className='w-10 h-10 rounded-full'
+                        src={player.imageUrl}
+                        alt=''
+                      />
+                    </div>
+                    <div className='flex-1 min-w-0'>
+                      {/*<span className='absolute inset-0' aria-hidden='true' />*/}
+                      <p className='font-medium text-gray-900 text-md'>
+                        {player.name}
+                      </p>
+                      <p className='text-sm text-green-500 truncate'>
+                        {getHighestBidderText(user, playerHighestBid)}
+                      </p>
+                    </div>
+                    <div className='flex-1 text-center'>
+                      <p className=''>Winning Bid</p>
+                      <p className='text-green-700'>
+                        ${playerHighestBid?.node?.amount || 0}
+                      </p>
+                    </div>
+                    <div className='w-32 text-center'>
+                      {user && (
+                        <BidForm
+                          user={user}
+                          auction={auction}
+                          player={player}
+                          playerHighestBid={playerHighestBid?.node?.amount || 0}
+                        />
+                      )}
+                      {!user && (
+                        <p>
+                          <a className='text-blue-500' href='/api/auth/login'>
+                            login
+                          </a>{' '}
+                          to bid
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );
