@@ -63,8 +63,8 @@ const BidForm = ({ user, auction, player, playerHighestBid }) => {
       <Form.Input
         field='amount'
         type='number'
-        step='1'
-        placeholder={playerHighestBid + 1}
+        step='.25'
+        placeholder={playerHighestBid + .25}
         playerHighestBid={playerHighestBid}
       ></Form.Input>
       <Button type='submit'>Place Bid</Button>
