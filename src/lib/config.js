@@ -19,13 +19,14 @@ const findURL = (local, prod, branch) => {
 
 let config = {};
 
-if (typeof window === 'undefined') {
-  const baseURLForEnv = findURL(
-    'http://localhost:3000',
-    'https://golf-tourney-auction.vercel.app',
-    'https://golf-tourney-auction.vercel.app'
-  );
+const baseURLForEnv = findURL(
+  'http://localhost:3000',
+  'https://golf-tourney-auction.vercel.app',
+  'https://golf-tourney-auction.vercel.app'
+);
 
+
+if (typeof window === 'undefined') {
   config = {
     AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
     AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET,

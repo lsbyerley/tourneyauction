@@ -36,7 +36,7 @@ const Input = React.forwardRef(
           disabled={disabled}
           placeholder={placeholder}
           step={step}
-          min={playerHighestBid + 1}
+          min={playerHighestBid + .25}
           className='w-full min-w-0 px-4 py-2 text-base text-gray-900 placeholder-gray-500 bg-white border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:placeholder-gray-400'
           ref={ref}
         />

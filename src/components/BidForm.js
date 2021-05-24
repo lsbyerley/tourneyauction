@@ -14,7 +14,7 @@ const BidForm = ({ user, auction, player, playerHighestBid }) => {
         async ({ bids: { aggregate, edges } }) => {
           const bidAmount = Number(formData.amount);
 
-          const userId = user.sub.split('|')[1];
+          const userId = user.sub;
 
           console.log('LOG: userId', userId);
 

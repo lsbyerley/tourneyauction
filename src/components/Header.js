@@ -49,13 +49,27 @@ const Header = ({ user }) => {
                         'inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2',
                         {
                           'border-indigo-500 text-gray-900': isActive('/'),
-                          'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700': !isActive(
-                            '/'
-                          ),
+                          'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700':
+                            !isActive('/'),
                         }
                       )}
                     >
                       Dashboard
+                    </a>
+                  </Link>
+                  <Link href='/auctions'>
+                    <a
+                      className={clsx(
+                        'inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2',
+                        {
+                          'border-indigo-500 text-gray-900':
+                            isActive('/auctions'),
+                          'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700':
+                            !isActive('/auctions'),
+                        }
+                      )}
+                    >
+                      Auctions
                     </a>
                   </Link>
                   <Link href='/about'>
@@ -63,10 +77,10 @@ const Header = ({ user }) => {
                       className={clsx(
                         'inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2',
                         {
-                          'border-indigo-500 text-gray-900': isActive('/about'),
-                          'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700': !isActive(
-                            '/about'
-                          ),
+                          'border-indigo-500 text-gray-900':
+                            isActive('/about'),
+                          'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700':
+                            !isActive('/about'),
                         }
                       )}
                     >
@@ -76,10 +90,10 @@ const Header = ({ user }) => {
                 </div>
               </div>
               <div className='hidden sm:ml-6 sm:flex sm:items-center'>
-                <button className='p-1 text-gray-400 bg-white rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
+                {/*<button className='p-1 text-gray-400 bg-white rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
                   <span className='sr-only'>View notifications</span>
                   <BellIcon className='w-6 h-6' aria-hidden='true' />
-                </button>
+                </button>*/}
 
                 {!user && <a href='/api/auth/login'>Login</a>}
 

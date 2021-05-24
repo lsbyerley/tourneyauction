@@ -17,7 +17,7 @@ export async function getServerSideProps({ req, res }) {
     return;
   }
 
-  /* const resp = await fetch('https://hasura-fit.herokuapp.com/v1/graphql', {
+  const resp = await fetch('https://frank-tiger-25.hasura.app/v1/graphql', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${session.accessToken}`,
@@ -25,26 +25,25 @@ export async function getServerSideProps({ req, res }) {
     body: JSON.stringify({
       query: `
         {
-          sessions {
-            created_at
-            workout(stage: PUBLISHED, where: {}) {
-              title
-            }
+          users {
+            id
+            name
           }
         }
       `,
     }),
-  }); */
+  });
 
-  // const { data } = await resp.json();
-  // return { props: { sessions: data.sessions, user: session.user } }; //comment back in here for session test
-  return { props: { user: session.user } };
+  const { data } = await resp.json();
+  console.log('LOG: data about', data);
+  return { props: { users: data?.users || null, user: session.user } };
+  // return { props: { user: session.user } };
 }
 
-export default function About({ user }) {
+export default function About({ users, user }) {
   // const { user: testuser, error, isLoading } = useUser();
 
-  console.log('LOG: about user from props', user);
+  console.log('LOG: about user from props', users, user);
   // console.log('LOG: about testuser from hook', testuser);
 
   return (

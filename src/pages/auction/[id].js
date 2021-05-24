@@ -3,6 +3,7 @@ import BasicLayout from '@/layouts/BasicLayout';
 import getAllAuctions from '@/lib/getAllAuctions';
 import getAuctionById from '@/lib/getAuctionById';
 import getPlayersBySportLeague from '@/lib/getPlayersBySportLeague';
+import getUsers from '@/lib/getUsers';
 import { AuctionBidsQuery } from '@/queries/bids';
 import useSWR from 'swr';
 import graphCMSClient from '@/lib/graphCMSClient';
@@ -10,6 +11,7 @@ import BidForm from '@/components/BidForm';
 import { useUser } from '@auth0/nextjs-auth0';
 import { format } from 'date-fns';
 import Countdown from 'react-countdown';
+import auth0 from '@/lib/auth0';
 
 const Auction = ({ auction, players }) => {
   const { user, error: userError, isLoading } = useUser();
@@ -36,7 +38,7 @@ const Auction = ({ auction, players }) => {
   const getHighestBidderText = (user, bid) => {
     console.log('LOG: user highest', user, bid);
     if (user && bid) {
-      const userId = user.sub.split('|')[1];
+      const userId = user.sub;
       return userId === bid?.node?.userId ? 'You are winning!' : '';
     }
     return '';
@@ -186,10 +188,21 @@ export async function getStaticProps(context) {
     league: auction.sport.league,
   });
 
+  // const session = await auth0.getSession(req);
+
+  // console.log('LOG: session', session);
+
+  
+  // TODO: figure out hasura graphql client query error
+  // const { users } = await getUsers();
+
+  // console.log('LOG: users', users);
+
   return {
     props: {
       auction,
       players,
+      // users,
     },
   };
 }
@@ -213,5 +226,13 @@ Auction.layoutProps = {
   },
   Layout: BasicLayout,
 };
+
+/* export async function getServerSideProps({ req, res }) {
+  return {
+    props: {
+      userInfo: {}
+    },
+  };
+} */
 
 export default Auction;
