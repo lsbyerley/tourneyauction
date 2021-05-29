@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Head from 'next/head';
 import BasicLayout from '@/layouts/BasicLayout';
 import getAllAuctions from '@/lib/getAllAuctions';
@@ -15,6 +16,7 @@ import auth0 from '@/lib/auth0';
 
 const Auction = ({ auction, players }) => {
   const { user, error: userError, isLoading } = useUser();
+  const [auctionOver, setAuctionOver] = useState(false);
 
   const { data, error } = useSWR(
     [AuctionBidsQuery, auction.id],
@@ -44,6 +46,23 @@ const Auction = ({ auction, players }) => {
     return '';
   };
 
+  const AuctionOverText = () => <span>Auction Over!</span>;
+
+  const countdownRenderer = ({ hours, minutes, seconds, completed }) => {
+    if (completed) {
+      // Render a completed state
+      setAuctionOver(true);
+      return <AuctionOverText />;
+    } else {
+      // Render a countdown
+      return (
+        <span>
+          {hours}:{minutes}:{seconds}
+        </span>
+      );
+    }
+  };
+
   return (
     <div>
       <Head>
@@ -52,6 +71,7 @@ const Auction = ({ auction, players }) => {
       </Head>
 
       <main>
+        <p>auction over: {auctionOver ? 'yes' : 'no'}</p>
         {!auction && <p>auction not found!</p>}
         {auction && (
           <div className='pb-5 mb-8 border-b border-gray-200 sm:flex sm:items-center sm:justify-between'>
@@ -109,7 +129,7 @@ const Auction = ({ auction, players }) => {
                 {'Time Left'}
               </dt>
               <dd className='mt-1 text-2xl font-semibold text-gray-900'>
-                <Countdown date={auction.endDate} />
+                <Countdown date={auction.endDate} renderer={countdownRenderer} />
               </dd>
             </div>
           </dl>
@@ -152,7 +172,7 @@ const Auction = ({ auction, players }) => {
                       </p>
                     </div>
                     <div className='w-32 text-center'>
-                      {user && (
+                      {!auctionOver && user && (
                         <BidForm
                           user={user}
                           auction={auction}
@@ -160,7 +180,7 @@ const Auction = ({ auction, players }) => {
                           playerHighestBid={playerHighestBid?.node?.amount || 0}
                         />
                       )}
-                      {!user && (
+                      {!auctionOver && !user && (
                         <p>
                           <a className='text-blue-500' href='/api/auth/login'>
                             login
