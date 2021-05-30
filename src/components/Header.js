@@ -5,6 +5,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
+import { AnchorButton } from '@/components/ui/Button';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -95,7 +96,7 @@ const Header = ({ user }) => {
                   <BellIcon className='w-6 h-6' aria-hidden='true' />
                 </button>*/}
 
-                {!user && <a href='/api/auth/login'>Login</a>}
+                {!user && <AnchorButton href='/api/auth/login'>Login</AnchorButton>}
 
                 {/* Profile dropdown */}
                 {user && (

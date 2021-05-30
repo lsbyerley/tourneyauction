@@ -1,8 +1,6 @@
 import { initAuth0 } from '@auth0/nextjs-auth0';
 import config from './config';
 
-// console.log('LOG: config', config, process.env.NODE_ENV);
-
 const authinstanceconfig = {
   baseURL: config.BASE_URL,
   clientID: config.AUTH0_CLIENT_ID,
@@ -21,8 +19,6 @@ const authinstanceconfig = {
     // rollingDuration: config.ROLLING_DURATION,
   },
 };
-
-console.log('LOG: authoinstanceconfigtest', authinstanceconfig);
 
 const auth0Instance = initAuth0(authinstanceconfig);
 

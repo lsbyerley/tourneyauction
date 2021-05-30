@@ -21,7 +21,7 @@ export default function Home({ auctions }) {
       <main>
         <ul className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
           {auctions.map((auction) => {
-            console.log('LOG: auction', auction);
+            let imgSlug = auction.sport.league.toLowerCase().replace(' ', '');
             return (
               <li
                 key={auction.id}
@@ -34,7 +34,7 @@ export default function Home({ auctions }) {
                         {auction.name}
                       </h3>
                       <span className='flex-shrink-0 inline-block px-2 py-0.5 text-green-800 text-xs font-medium bg-green-100 rounded-full'>
-                        {auction.sport.name}
+                        {auction.sport.league}
                       </span>
                     </div>
                     <p className='mt-1 text-sm text-gray-500 truncate'>
@@ -43,7 +43,7 @@ export default function Home({ auctions }) {
                   </div>
                   <img
                     className='flex-shrink-0 w-10 h-10 bg-gray-300 rounded-full'
-                    src={'insert user picture here'}
+                    src={`/${imgSlug}.png`}
                     alt=''
                   />
                 </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import BasicLayout from '@/layouts/BasicLayout';
 import getAllAuctions from '@/lib/getAllAuctions';
@@ -12,9 +12,8 @@ import BidForm from '@/components/BidForm';
 import { useUser } from '@auth0/nextjs-auth0';
 import { format } from 'date-fns';
 import Countdown from 'react-countdown';
-import auth0 from '@/lib/auth0';
 
-const Auction = ({ auction, players }) => {
+const Auction = ({ auction, players, users }) => {
   const { user, error: userError, isLoading } = useUser();
   const [auctionOver, setAuctionOver] = useState(false);
 
@@ -39,16 +38,31 @@ const Auction = ({ auction, players }) => {
 
   const getHighestBidderText = (user, bid) => {
     console.log('LOG: user highest', user, bid);
-    if (user && bid) {
+    if (!auctionOver && user && bid) {
       const userId = user.sub;
       return userId === bid?.node?.userId ? 'You are winning!' : '';
     }
     return '';
   };
 
-  const AuctionOverText = () => <span>Auction Over!</span>;
+  const getWinningBidderName = (user, highestBid) => {
+    if (auctionOver && highestBid) {
+      return 'winner name TODO';
+      // return `winner: ${highestBid?.node?.userId || 'not you :('}`
+    }
+    return null;
+  }
 
-  const countdownRenderer = ({ hours, minutes, seconds, completed }) => {
+  const AuctionOverText = () => <span className="text-red-500">Auction Over!</span>;
+
+  const auctionTicker = (props) => {
+    // console.log('LOG: auction ticker', props);
+    if (props.completed && !auctionOver) {
+      setAuctionOver(true);
+    }
+  }
+
+  const countdownRenderer = ({ days, hours, minutes, seconds, completed }) => {
     if (completed) {
       // Render a completed state
       setAuctionOver(true);
@@ -56,8 +70,8 @@ const Auction = ({ auction, players }) => {
     } else {
       // Render a countdown
       return (
-        <span>
-          {hours}:{minutes}:{seconds}
+        <span className="text-green-500">
+          {days}:{hours}:{minutes}:{seconds}
         </span>
       );
     }
@@ -79,18 +93,12 @@ const Auction = ({ auction, players }) => {
               {auction.name}
             </h3>
             <div className='flex mt-3 sm:mt-0 sm:ml-4'>
-              <button
-                type='button'
-                className='inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-              >
-                Join
-              </button>
-              <button
-                type='button'
-                className='inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-              >
-                Leave
-              </button>
+              <span class='inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800 mr-4'>
+                {auction.sport.name}
+              </span>
+              <span class='inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800'>
+                {auction.sport.league}
+              </span>
             </div>
           </div>
         )}
@@ -129,7 +137,11 @@ const Auction = ({ auction, players }) => {
                 {'Time Left'}
               </dt>
               <dd className='mt-1 text-2xl font-semibold text-gray-900'>
-                <Countdown date={auction.endDate} renderer={countdownRenderer} />
+                <Countdown
+                  date={auction.endDate}
+                  renderer={countdownRenderer}
+                  onTick={auctionTicker}
+                />
               </dd>
             </div>
           </dl>
@@ -163,13 +175,21 @@ const Auction = ({ auction, players }) => {
                       </p>
                       <p className='text-sm text-green-500 truncate'>
                         {getHighestBidderText(user, playerHighestBid)}
+                        {getWinningBidderName(user, playerHighestBid)}
                       </p>
                     </div>
                     <div className='flex-1 text-center'>
-                      <p className=''>Winning Bid</p>
-                      <p className='text-green-700'>
-                        ${playerHighestBid?.node?.amount || 0}
-                      </p>
+                      {playerHighestBid?.node?.amount && (
+                        <>
+                          <p className=''>Winning Bid</p>
+                          <p className='text-green-700'>
+                            ${playerHighestBid?.node?.amount}
+                          </p>
+                        </>
+                      )}
+                      {!playerHighestBid?.node?.amount && (
+                        <p className='text-sm text-gray-400'>No Bids!</p>
+                      )}
                     </div>
                     <div className='w-32 text-center'>
                       {!auctionOver && user && (
@@ -202,27 +222,18 @@ const Auction = ({ auction, players }) => {
 
 export async function getStaticProps(context) {
   const { id } = context.params;
+  const { users } = await getUsers();
   const { auction } = await getAuctionById({ id });
   const { players } = await getPlayersBySportLeague({
     sport: auction.sport.name,
     league: auction.sport.league,
   });
 
-  // const session = await auth0.getSession(req);
-
-  // console.log('LOG: session', session);
-
-  
-  // TODO: figure out hasura graphql client query error
-  // const { users } = await getUsers();
-
-  // console.log('LOG: users', users);
-
   return {
     props: {
       auction,
       players,
-      // users,
+      users,
     },
   };
 }

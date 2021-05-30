@@ -1,5 +1,4 @@
 import graphCMSClient, { gql } from '@/lib/graphCMSClient';
-// import { AuctionFragment } from '@/queries/auctions';
 
 export const BidsByAuctionIdQuery = gql`
   query BidsByAuctionId($id: ID!) {

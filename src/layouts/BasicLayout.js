@@ -8,9 +8,9 @@ const BasicLayout = ({ children }) => {
   console.log('LOG: from UserProvider BasicLayout', user, error, isLoading);
 
   return (
-    <div id='layout'>
+    <div id='layout' className='flex flex-col min-h-screen'>
       <Header user={user} />
-      <div className='px-4 py-20 mx-auto max-w-7xl sm:px-6 lg:px-8'>
+      <div className='flex-1 px-4 py-20 mx-auto max-w-7xl sm:px-6 lg:px-8'>
         {children}
       </div>
       <Footer />

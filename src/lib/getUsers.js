@@ -1,9 +1,8 @@
 import hasuraClient, { gql } from '@/lib/hasuraClient';
-// import { user } from '@/queries/user';
 
 export const GetUsersQuery = gql`
-  query GetUsers() {
-    users() {
+  query AllUsers {
+    users {
       id
       name
       email

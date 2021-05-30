@@ -13,10 +13,7 @@ const BidForm = ({ user, auction, player, playerHighestBid }) => {
         [AuctionBidsQuery, auction.id],
         async ({ bids: { aggregate, edges } }) => {
           const bidAmount = Number(formData.amount);
-
           const userId = user.sub;
-
-          console.log('LOG: userId', userId);
 
           try {
             const { bid } = await fetch('/api/graphcms/createAuctionBid', {
@@ -31,8 +28,6 @@ const BidForm = ({ user, auction, player, playerHighestBid }) => {
                 userId: userId,
               }),
             }).then((res) => res.json());
-
-            console.log('LOG: BidForm created', bid);
 
             return {
               bids: {
