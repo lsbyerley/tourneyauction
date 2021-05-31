@@ -37,7 +37,7 @@ const Auction = ({ auction, players, users }) => {
   };
 
   const getHighestBidderText = (user, bid) => {
-    console.log('LOG: user highest', user, bid);
+    // console.log('LOG: user highest', user, bid);
     if (!auctionOver && user && bid) {
       const userId = user.sub;
       return userId === bid?.node?.userId ? 'You are winning!' : '';
@@ -45,10 +45,12 @@ const Auction = ({ auction, players, users }) => {
     return '';
   };
 
-  const getWinningBidderName = (user, highestBid) => {
-    if (auctionOver && highestBid) {
-      return 'winner name TODO';
-      // return `winner: ${highestBid?.node?.userId || 'not you :('}`
+  const getWinningBidderName = (user, highestBid, users) => {
+    if (auctionOver && highestBid && users) {
+      const winningUser = users.find(
+        (u) => u.id === highestBid?.node?.userId
+      );
+      return `winner: ${winningUser?.name || 'na'}`;
     }
     return null;
   }
@@ -93,10 +95,10 @@ const Auction = ({ auction, players, users }) => {
               {auction.name}
             </h3>
             <div className='flex mt-3 sm:mt-0 sm:ml-4'>
-              <span class='inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800 mr-4'>
+              <span className='inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800 mr-4'>
                 {auction.sport.name}
               </span>
-              <span class='inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800'>
+              <span className='inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800'>
                 {auction.sport.league}
               </span>
             </div>
@@ -120,7 +122,7 @@ const Auction = ({ auction, players, users }) => {
               <dt className='text-sm font-medium text-gray-500 truncate'>
                 {'Start Date'}
               </dt>
-              <dd className='mt-1 text-2xl font-semibold text-gray-900'>
+              <dd className='mt-1 text-2xl font-semibold text-gray-500'>
                 {format(new Date(auction.startDate), 'LLL d, h:m aaa')}
               </dd>
             </div>
@@ -128,7 +130,7 @@ const Auction = ({ auction, players, users }) => {
               <dt className='text-sm font-medium text-gray-500 truncate'>
                 {'End Date'}
               </dt>
-              <dd className='mt-1 text-2xl font-semibold text-gray-900'>
+              <dd className='mt-1 text-2xl font-semibold text-gray-500'>
                 {format(new Date(auction.endDate), 'LLL d, h:m aaa')}
               </dd>
             </div>
@@ -175,7 +177,7 @@ const Auction = ({ auction, players, users }) => {
                       </p>
                       <p className='text-sm text-green-500 truncate'>
                         {getHighestBidderText(user, playerHighestBid)}
-                        {getWinningBidderName(user, playerHighestBid)}
+                        {getWinningBidderName(user, playerHighestBid, users)}
                       </p>
                     </div>
                     <div className='flex-1 text-center'>

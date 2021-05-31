@@ -3,11 +3,15 @@ import Button from '@/components/ui/Button';
 import { AuctionBidsQuery } from '@/queries/bids';
 import { mutate } from 'swr';
 import { useForm } from 'react-hook-form';
+import { differenceInMinutes } from 'date-fns';
+import { inRange } from 'lodash';
 
 const BidForm = ({ user, auction, player, playerHighestBid }) => {
   const { handleSubmit, ...formMethods } = useForm();
 
   const onSubmit = async (formData) => {
+    const auctionTimeLeft = differenceInMinutes(Date.now(), new Date(auction.endDate));
+
     try {
       mutate(
         [AuctionBidsQuery, auction.id],
@@ -29,6 +33,10 @@ const BidForm = ({ user, auction, player, playerHighestBid }) => {
               }),
             }).then((res) => res.json());
 
+            if (inRange(auctionTimeLeft, -3, 0)) {
+              updateAuctionEndDate();
+            }
+
             return {
               bids: {
                 aggregate: { count: ++aggregate.count },
@@ -48,6 +56,10 @@ const BidForm = ({ user, auction, player, playerHighestBid }) => {
       alert('ERROR SUBMITTING BID! toast error', error);
     }
   };
+
+  const updateAuctionEndDate = async () => {
+    console.log('LOG: add 3 minutes to auction end date');
+  }
 
   return (
     <Form

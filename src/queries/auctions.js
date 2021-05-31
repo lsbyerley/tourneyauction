@@ -30,3 +30,26 @@ export const AUCTION_BY_ID = gql`
   }
   ${AuctionFragment}
 `;
+
+export const UpdateAuctionEndDateQuery = gql`
+  mutation UpdateAuctionEndDate($id: ID!, $endDate: DateTime!) {
+    updatedAuction: updateAuctionEndDate(
+      data: { startDate: $endDate }
+      where: { id: $id }
+    ) {
+      id
+      startDate
+      endDate
+      name
+    }
+  }
+`;
+
+export const PublishAuctionQuery = gql`
+  mutation PublishAuction($id: ID!) {
+    publishedAuction: publishAuction(where: { id: $id }) {
+      ...AuctionData
+    }
+  }
+  ${AuctionFragment}
+`;
