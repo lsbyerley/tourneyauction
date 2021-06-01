@@ -33,12 +33,12 @@ const Header = ({ user }) => {
                 <div className='flex items-center flex-shrink-0'>
                   <img
                     className='block w-auto h-8 lg:hidden'
-                    src='https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg'
+                    src='/gta-logo.png'
                     alt='Workflow'
                   />
                   <img
                     className='hidden w-auto h-8 lg:block'
-                    src='https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-800-text.svg'
+                    src='/gta-logo.png'
                     alt='Workflow'
                   />
                 </div>
