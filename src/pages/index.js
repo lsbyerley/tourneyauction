@@ -19,7 +19,7 @@ export default function Home({ auctions }) {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <main>
-        <ul className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+        <ul className='grid grid-cols-1 gap-6 sm:grid-cols-2'>
           {auctions.map((auction) => {
             let imgSlug = auction.sport.league.toLowerCase().replace(' ', '');
             return (

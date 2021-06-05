@@ -47,22 +47,22 @@ const Auction = ({ auction, players, users }) => {
 
   const getWinningBidderName = (user, highestBid, users) => {
     if (auctionOver && highestBid && users) {
-      const winningUser = users.find(
-        (u) => u.id === highestBid?.node?.userId
-      );
+      const winningUser = users.find((u) => u.id === highestBid?.node?.userId);
       return `winner: ${winningUser?.name || 'na'}`;
     }
     return null;
-  }
+  };
 
-  const AuctionOverText = () => <span className="text-red-500">Auction Over!</span>;
+  const AuctionOverText = () => (
+    <span className='text-red-500'>Auction Over!</span>
+  );
 
   const auctionTicker = (props) => {
     // console.log('LOG: auction ticker', props);
     if (props.completed && !auctionOver) {
       setAuctionOver(true);
     }
-  }
+  };
 
   const countdownRenderer = ({ days, hours, minutes, seconds, completed }) => {
     if (completed) {
@@ -72,7 +72,7 @@ const Auction = ({ auction, players, users }) => {
     } else {
       // Render a countdown
       return (
-        <span className="text-green-500">
+        <span className='text-green-500'>
           {days}:{hours}:{minutes}:{seconds}
         </span>
       );
@@ -87,7 +87,6 @@ const Auction = ({ auction, players, users }) => {
       </Head>
 
       <main>
-        <p>auction over: {auctionOver ? 'yes' : 'no'}</p>
         {!auction && <p>auction not found!</p>}
         {auction && (
           <div className='pb-5 mb-8 border-b border-gray-200 sm:flex sm:items-center sm:justify-between'>
