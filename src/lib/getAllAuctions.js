@@ -3,7 +3,7 @@ import { AuctionFragment } from '@/queries/auctions';
 
 export const AllAuctionsQuery = gql`
   query AllAuctionsQuery() {
-    auctions() {
+    auctions(orderBy: createdAt_DESC) {
       ...AuctionFragment
     }
   }

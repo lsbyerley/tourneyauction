@@ -73,7 +73,10 @@ const Auction = ({ auction, players, users }) => {
       // Render a countdown
       return (
         <span className='text-green-500'>
-          {days}:{hours}:{minutes}:{seconds}
+          {days > 0 && <>{days} days, </>}
+          {hours > 0 && <>{hours} hrs, </>}
+          {minutes > 0 && <>{minutes} min, </>}
+          {seconds > 0 && <>{seconds} sec</>}
         </span>
       );
     }

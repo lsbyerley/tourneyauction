@@ -38,7 +38,12 @@ export default function Home({ auctions }) {
                       </span>
                     </div>
                     <p className='mt-1 text-sm text-gray-500 truncate'>
+                      Start Date:{' '}
                       {format(new Date(auction.startDate), 'LLL d h:m aaa')}
+                    </p>
+                    <p className='mt-1 text-sm text-gray-500 truncate'>
+                      End Date:{' '}
+                      {format(new Date(auction.endDate), 'LLL d h:m aaa')}
                     </p>
                   </div>
                   <img
