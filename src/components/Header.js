@@ -30,7 +30,7 @@ const Header = ({ user }) => {
           <div className='px-4 mx-auto max-w-7xl sm:px-6 lg:px-8'>
             <div className='flex justify-between h-16'>
               <div className='flex'>
-                <div className='flex items-center flex-shrink-0'>
+                <a href='/' className='flex items-center flex-shrink-0'>
                   <img
                     className='block w-auto h-8 lg:hidden'
                     src='/gta-logo.png'
@@ -41,7 +41,7 @@ const Header = ({ user }) => {
                     src='/gta-logo.png'
                     alt='Workflow'
                   />
-                </div>
+                </a>
                 <div className='hidden sm:ml-6 sm:flex sm:space-x-8'>
                   {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
                   <Link href='/'>
@@ -58,7 +58,7 @@ const Header = ({ user }) => {
                       Dashboard
                     </a>
                   </Link>
-                  <Link href='/auctions'>
+                  {/*<Link href='/auctions'>
                     <a
                       className={clsx(
                         'inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2',
@@ -87,7 +87,7 @@ const Header = ({ user }) => {
                     >
                       About
                     </a>
-                  </Link>
+                      </Link>*/}
                 </div>
               </div>
               <div className='hidden sm:ml-6 sm:flex sm:items-center'>
@@ -96,7 +96,9 @@ const Header = ({ user }) => {
                   <BellIcon className='w-6 h-6' aria-hidden='true' />
                 </button>*/}
 
-                {!user && <AnchorButton href='/api/auth/login'>Login</AnchorButton>}
+                {!user && (
+                  <AnchorButton href='/api/auth/login'>Login</AnchorButton>
+                )}
 
                 {/* Profile dropdown */}
                 {user && (
@@ -207,12 +209,12 @@ const Header = ({ user }) => {
               >
                 Dashboard
               </a>
-              <a
+              {/*<a
                 href='#'
                 className='block py-2 pl-3 pr-4 text-base font-medium text-gray-500 border-l-4 border-transparent hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'
               >
                 Team
-              </a>
+              </a>*/}
             </div>
             {user && (
               <div className='pt-4 pb-3 border-t border-gray-200'>
