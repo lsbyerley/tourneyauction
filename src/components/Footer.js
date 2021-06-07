@@ -7,7 +7,7 @@ const Footer = () => {
 
   const handleOnInvite = () => {
     inputRef.current.value = '';
-    alert('this feature isn\'t set up yet')
+    alert("this feature isn't set up yet");
   };
 
   return (
@@ -16,7 +16,7 @@ const Footer = () => {
         Footer
       </h2>
       <div className='px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:py-16 lg:px-8'>
-        <div className='pt-8 border-t border-gray-200 lg:flex lg:items-center lg:justify-between xl:mt-0'>
+        {/*<div className='pt-8 border-t border-gray-200 lg:flex lg:items-center lg:justify-between xl:mt-0'>
           <div>
             <h3 className='text-sm font-semibold tracking-wider text-gray-400 uppercase'>
               Golf Tourney Auction
@@ -48,7 +48,7 @@ const Footer = () => {
               </Button>
             </div>
           </form>
-        </div>
+  </div>*/}
         <div className='pt-8 mt-8 border-t border-gray-200 md:flex md:items-center md:justify-between'>
           <div className='flex space-x-6 md:order-2'>
             {social.map((item) => (
