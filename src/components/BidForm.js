@@ -1,6 +1,6 @@
 import Form from '@/components/ui/Form';
 import Button from '@/components/ui/Button';
-import { AuctionBidsQuery } from '@/queries/bids';
+import { AuctionBidsQuery, BidsByAuctionId } from '@/queries/bids';
 import { mutate } from 'swr';
 import { useForm } from 'react-hook-form';
 import { differenceInMinutes } from 'date-fns';
@@ -14,8 +14,8 @@ const BidForm = ({ user, auction, player, playerHighestBid }) => {
 
     try {
       mutate(
-        [AuctionBidsQuery, auction.id],
-        async ({ bids: { aggregate, edges } }) => {
+        [BidsByAuctionId, auction.id],
+        async ({ bids }) => {
           const bidAmount = Number(formData.amount);
           const userId = user.sub;
 
@@ -38,10 +38,11 @@ const BidForm = ({ user, auction, player, playerHighestBid }) => {
             }
 
             return {
-              bids: {
+              bids: [...bids, { ...bid }],
+              /* bids: {
                 aggregate: { count: ++aggregate.count },
                 edges: [...edges, { node: bid }],
-              },
+              }, */
             };
           } catch (error) {
             console.error('LOG: bid submit failed', error);
@@ -71,6 +72,7 @@ const BidForm = ({ user, auction, player, playerHighestBid }) => {
         field='amount'
         type='number'
         step='.25'
+        min={playerHighestBid + .25}
         placeholder={playerHighestBid + .25}
         playerHighestBid={playerHighestBid}
       ></Form.Input>

@@ -5,6 +5,7 @@ export const AuctionFragment = gql`
     id
     name
     sport {
+      id
       name
       league
     }

@@ -4,8 +4,9 @@ import BasicLayout from '@/layouts/BasicLayout';
 import getAllAuctions from '@/lib/getAllAuctions';
 import getAuctionById from '@/lib/getAuctionById';
 import getPlayersBySportLeague from '@/lib/getPlayersBySportLeague';
+import getPlayersByAuctionSport from '@/lib/getPlayersByAuctionSport';
 import getUsers from '@/lib/getUsers';
-import { AuctionBidsQuery } from '@/queries/bids';
+import { AuctionBidsQuery, BidsByAuctionId } from '@/queries/bids';
 import useSWR from 'swr';
 import graphCMSClient from '@/lib/graphCMSClient';
 import BidForm from '@/components/BidForm';
@@ -18,19 +19,21 @@ const Auction = ({ auction, players, users }) => {
   const [auctionOver, setAuctionOver] = useState(false);
 
   const { data, error } = useSWR(
-    [AuctionBidsQuery, auction.id],
+    [BidsByAuctionId, auction.id],
     (query, auctionId) => {
       return graphCMSClient.request(query, { auctionId });
     }
   );
 
+  console.log('LOG: data bids', data);
+
   const getPlayerHighestBid = (id) => {
     let highestBid = {};
-    const bids = data?.bids?.edges || [];
+    const bids = data?.bids || [];
     if (bids && bids.length) {
       const playerBids = bids
-        .filter((b) => b?.node?.player?.id === id)
-        .sort((a, b) => b?.node?.amount - a?.node?.amount);
+        .filter((b) => b?.player?.id === id)
+        .sort((a, b) => b?.amount - a?.amount);
       highestBid = playerBids[0] || {};
     }
     return highestBid;
@@ -40,14 +43,14 @@ const Auction = ({ auction, players, users }) => {
     // console.log('LOG: user highest', user, bid);
     if (!auctionOver && user && bid) {
       const userId = user.sub;
-      return userId === bid?.node?.userId ? 'You are winning!' : '';
+      return userId === bid?.userId ? 'You are winning!' : '';
     }
     return '';
   };
 
   const getWinningBidderName = (user, highestBid, users) => {
     if (auctionOver && highestBid && users) {
-      const winningUser = users.find((u) => u.id === highestBid?.node?.userId);
+      const winningUser = users.find((u) => u.id === highestBid?.userId);
       return `winner: ${winningUser?.name || 'na'}`;
     }
     return null;
@@ -116,15 +119,15 @@ const Auction = ({ auction, players, users }) => {
               <dt className='text-sm font-medium text-gray-500 truncate'>
                 Total Bids
               </dt>
-              <dd className='mt-1 text-2xl font-semibold text-gray-900'>
-                {data?.bids?.aggregate?.count || '0'}
+              <dd className='mt-1 text-xl font-semibold text-gray-900'>
+                {data?.bids?.length || '0'}
               </dd>
             </div>
             <div className='px-4 py-5 overflow-hidden bg-white rounded-lg shadow sm:p-6'>
               <dt className='text-sm font-medium text-gray-500 truncate'>
                 {'Start Date'}
               </dt>
-              <dd className='mt-1 text-2xl font-semibold text-gray-500'>
+              <dd className='mt-1 text-xl font-semibold text-gray-500'>
                 {format(new Date(auction.startDate), 'LLL d, h:m aaa')}
               </dd>
             </div>
@@ -132,7 +135,7 @@ const Auction = ({ auction, players, users }) => {
               <dt className='text-sm font-medium text-gray-500 truncate'>
                 {'End Date'}
               </dt>
-              <dd className='mt-1 text-2xl font-semibold text-gray-500'>
+              <dd className='mt-1 text-xl font-semibold text-gray-500'>
                 {format(new Date(auction.endDate), 'LLL d, h:m aaa')}
               </dd>
             </div>
@@ -140,7 +143,7 @@ const Auction = ({ auction, players, users }) => {
               <dt className='text-sm font-medium text-gray-500 truncate'>
                 {'Time Left'}
               </dt>
-              <dd className='mt-1 text-2xl font-semibold text-gray-900'>
+              <dd className='mt-1 text-xl font-semibold text-gray-900'>
                 <Countdown
                   date={auction.endDate}
                   renderer={countdownRenderer}
@@ -155,11 +158,12 @@ const Auction = ({ auction, players, users }) => {
           <h3 className='text-lg font-medium leading-6 text-gray-900'>
             Player List
           </h3>
-          {!players && <p>No Players!</p>}
+          {!players.length && <p className='mt-4'>No Players have been added to this auction yet.</p>}
           {players.length && (
             <div className='grid grid-cols-1 gap-4 mt-5 sm:grid-cols-2'>
               {players.map((player) => {
                 const playerHighestBid = getPlayerHighestBid(player.id);
+                console.log('LOG: playerhighest', playerHighestBid);
                 return (
                   <div
                     key={player.id}
@@ -183,15 +187,15 @@ const Auction = ({ auction, players, users }) => {
                       </p>
                     </div>
                     <div className='flex-1 text-center'>
-                      {playerHighestBid?.node?.amount && (
+                      {playerHighestBid?.amount && (
                         <>
                           <p className=''>Winning Bid</p>
                           <p className='text-green-700'>
-                            ${playerHighestBid?.node?.amount}
+                            ${playerHighestBid?.amount}
                           </p>
                         </>
                       )}
-                      {!playerHighestBid?.node?.amount && (
+                      {!playerHighestBid?.amount && (
                         <p className='text-sm text-gray-400'>No Bids!</p>
                       )}
                     </div>
@@ -201,7 +205,7 @@ const Auction = ({ auction, players, users }) => {
                           user={user}
                           auction={auction}
                           player={player}
-                          playerHighestBid={playerHighestBid?.node?.amount || 0}
+                          playerHighestBid={playerHighestBid?.amount || 0}
                         />
                       )}
                       {!auctionOver && !user && (
@@ -228,10 +232,17 @@ export async function getStaticProps(context) {
   const { id } = context.params;
   const { users } = await getUsers();
   const { auction } = await getAuctionById({ id });
-  const { players } = await getPlayersBySportLeague({
+  /* const { players } = await getPlayersBySportLeague({
     sport: auction.sport.name,
     league: auction.sport.league,
+  }); */
+
+  const { players } = await getPlayersByAuctionSport({
+    auction: auction.id,
+    sport: auction.sport.id,
   });
+
+  // console.log('LOG: test new players', testPlayers);
 
   return {
     props: {

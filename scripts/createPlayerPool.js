@@ -23,11 +23,15 @@ const upsertPlayers = async () => {
               name: ${playerName}, 
             }
           ) {
+            id
             name
           }
         }`,
     }),
   });
+
+  // TODO: Another mutation query to publish the player in graphcms
+
   const data = await res.json();
   return data;
 };
