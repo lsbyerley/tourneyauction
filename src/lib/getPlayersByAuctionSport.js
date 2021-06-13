@@ -2,7 +2,10 @@ import graphCMSClient, { gql } from '@/lib/graphCMSClient';
 
 export const PlayersByAuctionSport = gql`
   query PlayersByAuctionSport($auction: ID!, $sport: ID!) {
-    players(where: {auction: {id: $auction}, sport: {id: $sport}}) {
+    players(
+      orderBy: name_ASC
+      where: { auction: { id: $auction }, sport: { id: $sport } }
+    ) {
       id
       name
     }

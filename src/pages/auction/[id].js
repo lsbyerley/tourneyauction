@@ -128,7 +128,7 @@ const Auction = ({ auction, players, users }) => {
                 {'Start Date'}
               </dt>
               <dd className='mt-1 text-xl font-semibold text-gray-500'>
-                {format(new Date(auction.startDate), 'LLL d, h:m aaa')}
+                {format(new Date(auction.startDate), 'LLL d, h:mm aaa')}
               </dd>
             </div>
             <div className='px-4 py-5 overflow-hidden bg-white rounded-lg shadow sm:p-6'>
@@ -136,7 +136,7 @@ const Auction = ({ auction, players, users }) => {
                 {'End Date'}
               </dt>
               <dd className='mt-1 text-xl font-semibold text-gray-500'>
-                {format(new Date(auction.endDate), 'LLL d, h:m aaa')}
+                {format(new Date(auction.endDate), 'LLL d, h:mm aaa')}
               </dd>
             </div>
             <div className='px-4 py-5 overflow-hidden bg-white rounded-lg shadow sm:p-6'>
@@ -170,7 +170,7 @@ const Auction = ({ auction, players, users }) => {
                 return (
                   <div
                     key={player.id}
-                    className='relative flex items-center px-6 py-5 space-x-3 bg-white border border-gray-300 rounded-lg shadow-sm'
+                    className='relative flex items-center px-3 py-2 space-x-3 bg-white border border-gray-300 rounded-lg shadow-sm'
                   >
                     <div className='flex-shrink-0'>
                       <img
