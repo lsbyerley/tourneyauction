@@ -4,7 +4,6 @@ export const CreateAuctionBidQuery = gql`
   mutation CreateBid($data: BidCreateInput!) {
     createBid(data: $data) {
       id
-      stage
       amount
       userId
       auction {
@@ -27,6 +26,7 @@ export const PublishAuctionBidQuery = gql`
       userId
       auction {
         id
+        name
       }
       player {
         id
@@ -64,9 +64,13 @@ export const AuctionBidsQuery = gql`
 export const BidsByAuctionId = gql`
   query BidsByAuctionId($auctionId: ID!) {
     bids(where: { auction: { id: $auctionId } }) {
-      amount
       id
+      amount
       userId
+      auction {
+        id
+        name
+      }
       player {
         id
         name

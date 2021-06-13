@@ -5,7 +5,6 @@ import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
-import { AnchorButton } from '@/components/ui/Button';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -15,7 +14,6 @@ function classNames(...classes) {
 // https://github.com/tailwindlabs/tailwindcss.com/blob/7617a606ee89065144bcfe3e6b35d2938e707c0a/src/layouts/SidebarLayout.js
 
 const Header = ({ user }) => {
-  console.log('LOG: header user', user);
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
@@ -97,7 +95,12 @@ const Header = ({ user }) => {
                 </button>*/}
 
                 {!user && (
-                  <AnchorButton href='/api/auth/login'>Login</AnchorButton>
+                  <a
+                    href='/api/auth/login'
+                    className='inline-flex items-center px-3 py-2 mt-2 text-sm font-medium leading-4 text-blue-700 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+                  >
+                    Login
+                  </a>
                 )}
 
                 {/* Profile dropdown */}

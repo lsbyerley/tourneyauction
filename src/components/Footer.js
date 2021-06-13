@@ -1,5 +1,4 @@
 import { useRef } from 'react';
-import Button from '@/components/ui/Button';
 const social = [];
 
 const Footer = () => {

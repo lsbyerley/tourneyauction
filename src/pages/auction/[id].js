@@ -25,7 +25,7 @@ const Auction = ({ auction, players, users }) => {
     }
   );
 
-  console.log('LOG: data bids', data);
+  console.log('LOG: check bids', data?.bids);
 
   const getPlayerHighestBid = (id) => {
     let highestBid = {};
@@ -158,12 +158,15 @@ const Auction = ({ auction, players, users }) => {
           <h3 className='text-lg font-medium leading-6 text-gray-900'>
             Player List
           </h3>
-          {!players.length && <p className='mt-4'>No Players have been added to this auction yet.</p>}
-          {players.length && (
+          {!players.length && (
+            <p className='mt-4'>
+              No Players have been added to this auction yet.
+            </p>
+          )}
+          {players.length > 0 && (
             <div className='grid grid-cols-1 gap-4 mt-5 sm:grid-cols-2'>
               {players.map((player) => {
                 const playerHighestBid = getPlayerHighestBid(player.id);
-                console.log('LOG: playerhighest', playerHighestBid);
                 return (
                   <div
                     key={player.id}
@@ -232,17 +235,10 @@ export async function getStaticProps(context) {
   const { id } = context.params;
   const { users } = await getUsers();
   const { auction } = await getAuctionById({ id });
-  /* const { players } = await getPlayersBySportLeague({
-    sport: auction.sport.name,
-    league: auction.sport.league,
-  }); */
-
   const { players } = await getPlayersByAuctionSport({
     auction: auction.id,
     sport: auction.sport.id,
   });
-
-  // console.log('LOG: test new players', testPlayers);
 
   return {
     props: {
