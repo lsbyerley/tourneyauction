@@ -51,7 +51,7 @@ const Auction = ({ auction, players, users }) => {
   const getWinningBidderName = (user, highestBid, users) => {
     if (auctionOver && highestBid && users) {
       const winningUser = users.find((u) => u.id === highestBid?.userId);
-      return `winner: ${winningUser?.name || 'na'}`;
+      return (winningUser && winningUser.name) ? `winner ${winningUser.name}` : '';
     }
     return null;
   };
