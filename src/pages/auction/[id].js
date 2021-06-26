@@ -61,7 +61,6 @@ const Auction = ({ auction, players, users }) => {
   );
 
   const auctionTicker = (props) => {
-    // console.log('LOG: auction ticker', props);
     if (props.completed && !auctionOver) {
       setAuctionOver(true);
     }
@@ -246,6 +245,7 @@ export async function getStaticProps(context) {
       players,
       users,
     },
+    revalidate: 10,
   };
 }
 
