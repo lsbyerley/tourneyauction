@@ -25,8 +25,6 @@ const Auction = ({ auction, players, users }) => {
     }
   );
 
-  console.log('LOG: check bids', data?.bids);
-
   const getPlayerHighestBid = (id) => {
     let highestBid = {};
     const bids = data?.bids || [];
@@ -113,7 +111,7 @@ const Auction = ({ auction, players, users }) => {
           <h3 className='text-lg font-medium leading-6 text-gray-900'>
             Auction Stats
           </h3>
-          <dl className='grid grid-cols-1 gap-5 mt-5 sm:grid-cols-4'>
+          <dl className='grid grid-cols-1 gap-5 mt-5 sm:grid-cols-3'>
             <div className='px-4 py-5 overflow-hidden bg-white rounded-lg shadow sm:p-6'>
               <dt className='text-sm font-medium text-gray-500 truncate'>
                 Total Bids
@@ -122,14 +120,14 @@ const Auction = ({ auction, players, users }) => {
                 {data?.bids?.length || '0'}
               </dd>
             </div>
-            <div className='px-4 py-5 overflow-hidden bg-white rounded-lg shadow sm:p-6'>
+            {/* <div className='px-4 py-5 overflow-hidden bg-white rounded-lg shadow sm:p-6'>
               <dt className='text-sm font-medium text-gray-500 truncate'>
                 {'Start Date'}
               </dt>
               <dd className='mt-1 text-xl font-semibold text-gray-500'>
                 {format(new Date(auction.startDate), 'LLL d, h:mm aaa')}
               </dd>
-            </div>
+            </div> */}
             <div className='px-4 py-5 overflow-hidden bg-white rounded-lg shadow sm:p-6'>
               <dt className='text-sm font-medium text-gray-500 truncate'>
                 {'End Date'}
@@ -230,7 +228,7 @@ const Auction = ({ auction, players, users }) => {
   );
 };
 
-export async function getStaticProps(context) {
+/* export async function getStaticProps(context) {
   const { id } = context.params;
   const { users } = await getUsers();
   const { auction } = await getAuctionById({ id });
@@ -260,6 +258,24 @@ export async function getStaticPaths() {
     paths,
     fallback: false,
   };
+} */
+
+export async function getServerSideProps(context) {
+  const { id } = context.query;
+  const { users } = await getUsers();
+  const { auction } = await getAuctionById({ id });
+  const { players } = await getPlayersByAuctionSport({
+    auction: auction.id,
+    sport: auction.sport.id,
+  });
+
+  return {
+    props: {
+      auction,
+      players,
+      users,
+    },
+  };
 }
 
 Auction.layoutProps = {
@@ -268,13 +284,5 @@ Auction.layoutProps = {
   },
   Layout: BasicLayout,
 };
-
-/* export async function getServerSideProps({ req, res }) {
-  return {
-    props: {
-      userInfo: {}
-    },
-  };
-} */
 
 export default Auction;

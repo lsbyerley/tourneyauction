@@ -4,12 +4,22 @@ import { PlusCircleIcon } from '@heroicons/react/solid';
 import getAllAuctions from '@/lib/getAllAuctions';
 import { format } from 'date-fns';
 
-export async function getStaticProps() {
+/* export async function getStaticProps() {
   const { auctions } = await getAllAuctions();
   return {
     props: { auctions },
     revalidate: 30
   };
+} */
+
+export async function getServerSideProps(context) {
+  const { auctions } = await getAllAuctions();
+
+  return {
+    props: {
+      auctions,
+    }
+  }
 }
 
 const AuctionItem = ({ auction }) => {
@@ -79,7 +89,6 @@ const AuctionItem = ({ auction }) => {
 export default function Home({ auctions }) {
 
   const liveAuctions = auctions.filter((a) => {
-    console.log('LOG: endate', a.endDate, new Date(), a.endDate < new Date().toISOString())
     return a.endDate > new Date().toISOString();
   });
   const completedAuctions = auctions.filter((a) => {
@@ -100,7 +109,7 @@ export default function Home({ auctions }) {
         <ul className='grid grid-cols-1 gap-6 mb-16 sm:grid-cols-2'>
           {liveAuctions.map((auction) => {
             return (
-              <AuctionItem auction={auction} />
+              <AuctionItem key={auction.id} auction={auction} />
             );
           })}
         </ul>
@@ -111,7 +120,7 @@ export default function Home({ auctions }) {
         <ul className='grid grid-cols-1 gap-6 mb-8 sm:grid-cols-2'>
           {completedAuctions.map((auction) => {
             return (
-              <AuctionItem auction={auction} />
+              <AuctionItem key={auction.id} auction={auction} />
             );
           })}
         </ul>
