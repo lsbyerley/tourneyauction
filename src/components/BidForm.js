@@ -5,7 +5,7 @@ import { differenceInMinutes } from 'date-fns';
 import { inRange } from 'lodash';
 
 const BidForm = ({ user, auction, player, playerHighestBid }) => {
-  const { handleSubmit, errors, register } = useForm();
+  const { handleSubmit, register, formState: { errors } } = useForm();
 
   const onSubmit = async (formData, e) => {
     const auctionTimeLeft = differenceInMinutes(Date.now(), new Date(auction.endDate));
@@ -69,7 +69,7 @@ const BidForm = ({ user, auction, player, playerHighestBid }) => {
         placeholder={minBid}
         type="number"
         name="amount"
-        ref={register({ min: minBid })}
+        {...register('amount', { min: minBid })}
         className="w-full min-w-0 px-4 py-2 text-base text-gray-900 placeholder-gray-500 bg-white border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:placeholder-gray-400"
       ></input>
       {errors.amount && <p className="mt-2 text-sm text-red-700">Bid must be greater than ${playerHighestBid}</p>}
