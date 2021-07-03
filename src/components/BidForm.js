@@ -8,10 +8,7 @@ const BidForm = ({ user, auction, player, playerHighestBid }) => {
   const { handleSubmit, errors, register } = useForm();
 
   const onSubmit = async (formData, e) => {
-    const auctionTimeLeft = differenceInMinutes(
-      Date.now(),
-      new Date(auction.endDate)
-    );
+    const auctionTimeLeft = differenceInMinutes(Date.now(), new Date(auction.endDate));
 
     try {
       mutate(
@@ -70,19 +67,15 @@ const BidForm = ({ user, auction, player, playerHighestBid }) => {
         step={0.25}
         min={minBid}
         placeholder={minBid}
-        type='number'
-        name='amount'
+        type="number"
+        name="amount"
         ref={register({ min: minBid })}
-        className='w-full min-w-0 px-4 py-2 text-base text-gray-900 placeholder-gray-500 bg-white border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:placeholder-gray-400'
+        className="w-full min-w-0 px-4 py-2 text-base text-gray-900 placeholder-gray-500 bg-white border border-gray-300 rounded-md appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:placeholder-gray-400"
       ></input>
-      {errors.amount && (
-        <p className='mt-2 text-sm text-red-700'>
-          Bid must be greater than ${playerHighestBid}
-        </p>
-      )}
+      {errors.amount && <p className="mt-2 text-sm text-red-700">Bid must be greater than ${playerHighestBid}</p>}
       <button
-        className='inline-flex items-center px-3 py-2 mt-2 text-sm font-medium leading-4 text-blue-700 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
-        type='submit'
+        className="inline-flex items-center px-3 py-2 mt-2 text-sm font-medium leading-4 text-blue-700 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        type="submit"
       >
         Place Bid
       </button>

@@ -34,10 +34,7 @@ export const AUCTION_BY_ID = gql`
 
 export const UpdateAuctionEndDateQuery = gql`
   mutation UpdateAuctionEndDate($id: ID!, $endDate: DateTime!) {
-    updatedAuction: updateAuctionEndDate(
-      data: { startDate: $endDate }
-      where: { id: $id }
-    ) {
+    updatedAuction: updateAuctionEndDate(data: { startDate: $endDate }, where: { id: $id }) {
       id
       startDate
       endDate

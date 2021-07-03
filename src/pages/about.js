@@ -50,7 +50,7 @@ export default function About({ users, user }) {
     <div>
       <Head>
         <title>About</title>
-        <link rel='icon' href='/favicon.ico' />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>

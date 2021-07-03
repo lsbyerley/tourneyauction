@@ -19,12 +19,7 @@ const findURL = (local, prod, branch) => {
 
 let config = {};
 
-const baseURLForEnv = findURL(
-  'http://localhost:3000',
-  'https://golf-tourney-auction.vercel.app',
-  'https://golf-tourney-auction.vercel.app'
-);
-
+const baseURLForEnv = findURL('http://localhost:3000', 'https://golf-tourney-auction.vercel.app', 'https://golf-tourney-auction.vercel.app');
 
 if (typeof window === 'undefined') {
   config = {

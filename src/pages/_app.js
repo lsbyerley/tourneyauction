@@ -42,25 +42,16 @@ const MyApp = ({ Component, pageProps }) => {
   }, [navIsOpen]);
 
   const Layout = Component.layoutProps?.Layout || Fragment;
-  const layoutProps = Component.layoutProps?.Layout
-    ? { layoutProps: Component.layoutProps, navIsOpen, setNavIsOpen }
-    : {};
+  const layoutProps = Component.layoutProps?.Layout ? { layoutProps: Component.layoutProps, navIsOpen, setNavIsOpen } : {};
 
   const meta = Component.layoutProps?.meta || {};
-  const description =
-    meta.metaDescription || meta.description || 'Golf Tourney Auction';
+  const description = meta.metaDescription || meta.description || 'Golf Tourney Auction';
 
   return (
     <>
-      <Title suffix='Golf Tourney Auction'>
-        {meta.metaTitle || meta.title}
-      </Title>
+      <Title suffix="Golf Tourney Auction">{meta.metaTitle || meta.title}</Title>
       <Head>
-        <meta
-          key='og:description'
-          property='og:description'
-          content={description}
-        />
+        <meta key="og:description" property="og:description" content={description} />
       </Head>
       <UserProvider>
         <Layout {...layoutProps}>

@@ -30,9 +30,7 @@ const getUser = async (cookie = '') => {
 };
 
 export const useGetUser = () => {
-  const [loading, setLoading] = useState(
-    () => !(typeof window !== 'undefined' && window.__user)
-  );
+  const [loading, setLoading] = useState(() => !(typeof window !== 'undefined' && window.__user));
 
   const [profile, setProfile] = useState(() => {
     if (typeof window === 'undefined') {

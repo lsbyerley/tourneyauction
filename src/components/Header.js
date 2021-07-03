@@ -22,36 +22,24 @@ const Header = ({ user }) => {
   };
 
   return (
-    <Disclosure as='nav' className='bg-white shadow'>
+    <Disclosure as="nav" className="bg-white shadow">
       {({ open }) => (
         <>
-          <div className='px-4 mx-auto max-w-7xl sm:px-6 lg:px-8'>
-            <div className='flex justify-between h-16'>
-              <div className='flex'>
-                <a href='/' className='flex items-center flex-shrink-0'>
-                  <img
-                    className='block w-auto h-8 lg:hidden'
-                    src='/gta-logo.png'
-                    alt='Workflow'
-                  />
-                  <img
-                    className='hidden w-auto h-8 lg:block'
-                    src='/gta-logo.png'
-                    alt='Workflow'
-                  />
+          <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div className="flex justify-between h-16">
+              <div className="flex">
+                <a href="/" className="flex items-center flex-shrink-0">
+                  <img className="block w-auto h-8 lg:hidden" src="/gta-logo.png" alt="Workflow" />
+                  <img className="hidden w-auto h-8 lg:block" src="/gta-logo.png" alt="Workflow" />
                 </a>
-                <div className='hidden sm:ml-6 sm:flex sm:space-x-8'>
+                <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                   {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
-                  <Link href='/'>
+                  <Link href="/">
                     <a
-                      className={clsx(
-                        'inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2',
-                        {
-                          'border-indigo-500 text-gray-900': isActive('/'),
-                          'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700':
-                            !isActive('/'),
-                        }
-                      )}
+                      className={clsx('inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2', {
+                        'border-indigo-500 text-gray-900': isActive('/'),
+                        'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700': !isActive('/'),
+                      })}
                     >
                       Dashboard
                     </a>
@@ -88,7 +76,7 @@ const Header = ({ user }) => {
                       </Link>*/}
                 </div>
               </div>
-              <div className='hidden sm:ml-6 sm:flex sm:items-center'>
+              <div className="hidden sm:ml-6 sm:flex sm:items-center">
                 {/*<button className='p-1 text-gray-400 bg-white rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
                   <span className='sr-only'>View notifications</span>
                   <BellIcon className='w-6 h-6' aria-hidden='true' />
@@ -96,8 +84,8 @@ const Header = ({ user }) => {
 
                 {!user && (
                   <a
-                    href='/api/auth/login'
-                    className='inline-flex items-center px-3 py-2 mt-2 text-sm font-medium leading-4 text-blue-700 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+                    href="/api/auth/login"
+                    className="inline-flex items-center px-3 py-2 mt-2 text-sm font-medium leading-4 text-blue-700 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
                     Login
                   </a>
@@ -105,71 +93,49 @@ const Header = ({ user }) => {
 
                 {/* Profile dropdown */}
                 {user && (
-                  <Menu as='div' className='relative ml-3'>
+                  <Menu as="div" className="relative ml-3">
                     {({ open }) => (
                       <>
                         <div>
                           <Menu.Button
-                            className='flex text-sm bg-white rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                            className="flex text-sm bg-white rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             onClick={() => setOpen(true)}
                           >
-                            <span className='sr-only'>Open user menu</span>
-                            <img
-                              className='w-8 h-8 rounded-full'
-                              src={user.picture}
-                              alt=''
-                            />
+                            <span className="sr-only">Open user menu</span>
+                            <img className="w-8 h-8 rounded-full" src={user.picture} alt="" />
                           </Menu.Button>
                         </div>
                         <Transition
                           show={open}
                           as={Fragment}
-                          enter='transition ease-out duration-200'
-                          enterFrom='transform opacity-0 scale-95'
-                          enterTo='transform opacity-100 scale-100'
-                          leave='transition ease-in duration-75'
-                          leaveFrom='transform opacity-100 scale-100'
-                          leaveTo='transform opacity-0 scale-95'
+                          enter="transition ease-out duration-200"
+                          enterFrom="transform opacity-0 scale-95"
+                          enterTo="transform opacity-100 scale-100"
+                          leave="transition ease-in duration-75"
+                          leaveFrom="transform opacity-100 scale-100"
+                          leaveTo="transform opacity-0 scale-95"
                         >
                           <Menu.Items
                             static
-                            className='absolute right-0 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
+                            className="absolute right-0 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
                           >
                             <Menu.Item>
                               {({ active }) => (
-                                <a
-                                  href='#'
-                                  className={classNames(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700'
-                                  )}
-                                >
+                                <a href="#" className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
                                   Your Profile
                                 </a>
                               )}
                             </Menu.Item>
                             <Menu.Item>
                               {({ active }) => (
-                                <a
-                                  href='#'
-                                  className={classNames(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700'
-                                  )}
-                                >
+                                <a href="#" className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
                                   Settings
                                 </a>
                               )}
                             </Menu.Item>
                             <Menu.Item>
                               {({ active }) => (
-                                <a
-                                  href='/api/auth/logout'
-                                  className={classNames(
-                                    active ? 'bg-gray-100' : '',
-                                    'block px-4 py-2 text-sm text-gray-700'
-                                  )}
-                                >
+                                <a href="/api/auth/logout" className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
                                   Sign out
                                 </a>
                               )}
@@ -181,35 +147,24 @@ const Header = ({ user }) => {
                   </Menu>
                 )}
               </div>
-              <div className='flex items-center -mr-2 sm:hidden'>
+              <div className="flex items-center -mr-2 sm:hidden">
                 {/* Mobile menu button */}
-                <Disclosure.Button className='inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500'>
-                  <span className='sr-only'>Open main menu</span>
+                <Disclosure.Button className="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                  <span className="sr-only">Open main menu</span>
                   {open ? (
-                    <XIcon
-                      className='block w-6 h-6'
-                      aria-hidden='true'
-                      onClick={() => setOpen(false)}
-                    />
+                    <XIcon className="block w-6 h-6" aria-hidden="true" onClick={() => setOpen(false)} />
                   ) : (
-                    <MenuIcon
-                      className='block w-6 h-6'
-                      aria-hidden='true'
-                      onClick={() => setOpen(true)}
-                    />
+                    <MenuIcon className="block w-6 h-6" aria-hidden="true" onClick={() => setOpen(true)} />
                   )}
                 </Disclosure.Button>
               </div>
             </div>
           </div>
 
-          <Disclosure.Panel className='sm:hidden'>
-            <div className='pt-2 pb-3 space-y-1'>
+          <Disclosure.Panel className="sm:hidden">
+            <div className="pt-2 pb-3 space-y-1">
               {/* Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" */}
-              <a
-                href='#'
-                className='block py-2 pl-3 pr-4 text-base font-medium text-indigo-700 border-l-4 border-indigo-500 bg-indigo-50'
-              >
+              <a href="#" className="block py-2 pl-3 pr-4 text-base font-medium text-indigo-700 border-l-4 border-indigo-500 bg-indigo-50">
                 Dashboard
               </a>
               {/*<a
@@ -220,45 +175,28 @@ const Header = ({ user }) => {
               </a>*/}
             </div>
             {user && (
-              <div className='pt-4 pb-3 border-t border-gray-200'>
-                <div className='flex items-center px-4'>
-                  <div className='flex-shrink-0'>
-                    <img
-                      className='w-10 h-10 rounded-full'
-                      src={user.picture}
-                      alt=''
-                    />
+              <div className="pt-4 pb-3 border-t border-gray-200">
+                <div className="flex items-center px-4">
+                  <div className="flex-shrink-0">
+                    <img className="w-10 h-10 rounded-full" src={user.picture} alt="" />
                   </div>
-                  <div className='ml-3'>
-                    <div className='text-base font-medium text-gray-800'>
-                      {user.name}
-                    </div>
-                    <div className='text-sm font-medium text-gray-500'>
-                      {user.email}
-                    </div>
+                  <div className="ml-3">
+                    <div className="text-base font-medium text-gray-800">{user.name}</div>
+                    <div className="text-sm font-medium text-gray-500">{user.email}</div>
                   </div>
-                  <button className='flex-shrink-0 p-1 ml-auto text-gray-400 bg-white rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
-                    <span className='sr-only'>View notifications</span>
-                    <BellIcon className='w-6 h-6' aria-hidden='true' />
+                  <button className="flex-shrink-0 p-1 ml-auto text-gray-400 bg-white rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <span className="sr-only">View notifications</span>
+                    <BellIcon className="w-6 h-6" aria-hidden="true" />
                   </button>
                 </div>
-                <div className='mt-3 space-y-1'>
-                  <a
-                    href='#'
-                    className='block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100'
-                  >
+                <div className="mt-3 space-y-1">
+                  <a href="#" className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
                     Your Profile
                   </a>
-                  <a
-                    href='#'
-                    className='block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100'
-                  >
+                  <a href="#" className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
                     Settings
                   </a>
-                  <a
-                    href='/api/auth/logout'
-                    className='block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100'
-                  >
+                  <a href="/api/auth/logout" className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
                     Sign out
                   </a>
                 </div>
