@@ -135,7 +135,7 @@ const Auction = ({ auction, players, users }) => {
                     <div className="flex-shrink-0 w-10 h-10">
                       {player.imageUrl && <Image className="rounded-full" src={player.imageUrl} alt={player.name} layout="fill" objectFit="contain" />}
                       {!player.imageUrl && (
-                        <svg class="w-full h-full text-gray-300" fill="currentColor" viewBox="0 0 24 20">
+                        <svg className="w-full h-full text-gray-300" fill="currentColor" viewBox="0 0 24 20">
                           <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"></path>
                         </svg>
                       )}
