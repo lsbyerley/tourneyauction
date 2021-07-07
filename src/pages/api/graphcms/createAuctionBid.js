@@ -1,7 +1,7 @@
 import graphCMSMutationClient from '@/lib/graphCMSMutationClient.js';
 import { CreateAuctionBidQuery, PublishAuctionBidQuery } from '@/queries/bids';
 
-export default async (req, res) => {
+const createAuctionBid = async (req, res) => {
   try {
     const { createBid } = await graphCMSMutationClient.request(CreateAuctionBidQuery, {
       data: req.body,
@@ -20,3 +20,5 @@ export default async (req, res) => {
     });
   }
 };
+
+export default createAuctionBid;

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
@@ -28,10 +29,12 @@ const Header = ({ user }) => {
           <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div className="flex justify-between h-16">
               <div className="flex">
-                <a href="/" className="flex items-center flex-shrink-0">
-                  <img className="block w-auto h-8 lg:hidden" src="/gta-logo.png" alt="Workflow" />
-                  <img className="hidden w-auto h-8 lg:block" src="/gta-logo.png" alt="Workflow" />
-                </a>
+                <Link href="/">
+                  <a className="relative flex items-center flex-shrink-0 w-40 h-8">
+                    <Image src="/gta-logo.png" alt="tourney-auction" layout="fill" objectFit="contain" />
+                  </a>
+                </Link>
+
                 <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                   {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
                   <Link href="/">
@@ -83,12 +86,11 @@ const Header = ({ user }) => {
                 </button>*/}
 
                 {!user && (
-                  <a
-                    href="/api/auth/login"
-                    className="inline-flex items-center px-3 py-2 mt-2 text-sm font-medium leading-4 text-blue-700 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    Login
-                  </a>
+                  <Link href="/api/auth/login">
+                    <a className="inline-flex items-center px-3 py-2 mt-2 text-sm font-medium leading-4 text-blue-700 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                      Login
+                    </a>
+                  </Link>
                 )}
 
                 {/* Profile dropdown */}
@@ -102,7 +104,7 @@ const Header = ({ user }) => {
                             onClick={() => setOpen(true)}
                           >
                             <span className="sr-only">Open user menu</span>
-                            <img className="w-8 h-8 rounded-full" src={user.picture} alt="" />
+                            <Image className="w-8 h-8 rounded-full" src={user.picture} alt="" />
                           </Menu.Button>
                         </div>
                         <Transition
@@ -135,9 +137,9 @@ const Header = ({ user }) => {
                             </Menu.Item>
                             <Menu.Item>
                               {({ active }) => (
-                                <a href="/api/auth/logout" className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>
-                                  Sign out
-                                </a>
+                                <Link href="/api/auth/logout">
+                                  <a className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}>Sign out</a>
+                                </Link>
                               )}
                             </Menu.Item>
                           </Menu.Items>
@@ -164,9 +166,9 @@ const Header = ({ user }) => {
           <Disclosure.Panel className="sm:hidden">
             <div className="pt-2 pb-3 space-y-1">
               {/* Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" */}
-              <a href="#" className="block py-2 pl-3 pr-4 text-base font-medium text-indigo-700 border-l-4 border-indigo-500 bg-indigo-50">
-                Dashboard
-              </a>
+              <Link href="/">
+                <a className="block py-2 pl-3 pr-4 text-base font-medium text-indigo-700 border-l-4 border-indigo-500 bg-indigo-50">Dashboard</a>
+              </Link>
               {/*<a
                 href='#'
                 className='block py-2 pl-3 pr-4 text-base font-medium text-gray-500 border-l-4 border-transparent hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'
@@ -178,7 +180,7 @@ const Header = ({ user }) => {
               <div className="pt-4 pb-3 border-t border-gray-200">
                 <div className="flex items-center px-4">
                   <div className="flex-shrink-0">
-                    <img className="w-10 h-10 rounded-full" src={user.picture} alt="" />
+                    <Image className="w-10 h-10 rounded-full" src={user.picture} alt="" />
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium text-gray-800">{user.name}</div>
@@ -190,15 +192,9 @@ const Header = ({ user }) => {
                   </button>
                 </div>
                 <div className="mt-3 space-y-1">
-                  <a href="#" className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
-                    Your Profile
-                  </a>
-                  <a href="#" className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
-                    Settings
-                  </a>
-                  <a href="/api/auth/logout" className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
-                    Sign out
-                  </a>
+                  <Link href="/api/auth/logout">
+                    <a className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Sign out</a>
+                  </Link>
                 </div>
               </div>
             )}

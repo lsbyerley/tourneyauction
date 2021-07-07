@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 import Head from 'next/head';
 import BasicLayout from '@/layouts/BasicLayout';
-import getAllAuctions from '@/lib/getAllAuctions';
 import getAuctionById from '@/lib/getAuctionById';
-import getPlayersBySportLeague from '@/lib/getPlayersBySportLeague';
 import getPlayersByAuctionSport from '@/lib/getPlayersByAuctionSport';
 import getUsers from '@/lib/getUsers';
-import { AuctionBidsQuery, BidsByAuctionId } from '@/queries/bids';
+import { BidsByAuctionId } from '@/queries/bids';
 import useSWR from 'swr';
 import graphCMSClient from '@/lib/graphCMSClient';
 import BidForm from '@/components/BidForm';
@@ -132,8 +132,13 @@ const Auction = ({ auction, players, users }) => {
                 const playerHighestBid = getPlayerHighestBid(player.id);
                 return (
                   <div key={player.id} className="relative flex items-center px-3 py-2 space-x-3 bg-white border border-gray-300 rounded-lg shadow-sm">
-                    <div className="flex-shrink-0">
-                      <img className="w-10 h-10 rounded-full" src={player.imageUrl} alt="" />
+                    <div className="flex-shrink-0 w-10 h-10">
+                      {player.imageUrl && <Image className="rounded-full" src={player.imageUrl} alt={player.name} layout="fill" objectFit="contain" />}
+                      {!player.imageUrl && (
+                        <svg class="w-full h-full text-gray-300" fill="currentColor" viewBox="0 0 24 20">
+                          <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       {/*<span className='absolute inset-0' aria-hidden='true' />*/}
@@ -156,9 +161,9 @@ const Auction = ({ auction, players, users }) => {
                       {!auctionOver && user && <BidForm user={user} auction={auction} player={player} playerHighestBid={playerHighestBid?.amount || 0} />}
                       {!auctionOver && !user && (
                         <p>
-                          <a className="text-blue-500" href="/api/auth/login">
-                            login
-                          </a>{' '}
+                          <Link href="/api/auth/login">
+                            <a className="text-blue-500">Login</a>
+                          </Link>{' '}
                           to bid
                         </p>
                       )}

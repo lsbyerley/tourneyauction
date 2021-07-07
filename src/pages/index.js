@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Image from 'next/image';
 import BasicLayout from '@/layouts/BasicLayout';
 import { PlusCircleIcon } from '@heroicons/react/solid';
 import getAllAuctions from '@/lib/getAllAuctions';
@@ -35,7 +36,9 @@ const AuctionItem = ({ auction }) => {
           <p className="mt-1 text-sm text-gray-500 truncate">Start Date: {format(new Date(auction.startDate), 'LLL d h:mm aaa')}</p>
           <p className="mt-1 text-sm text-gray-500 truncate">End Date: {format(new Date(auction.endDate), 'LLL d h:mm aaa')}</p>
         </div>
-        <img className="flex-shrink-0 w-10 h-10 bg-gray-300 rounded-full" src={`/${imgSlug}.png`} alt="" />
+        <div className="relative flex-shrink-0 w-10 h-10">
+          <Image src={`/${imgSlug}.png`} alt="" layout="fill" objectFit="contain" className="rounded-full" />
+        </div>
       </div>
       <div>
         <div className="flex -mt-px divide-x divide-gray-200">

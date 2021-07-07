@@ -1,7 +1,7 @@
 import graphCMSMutationClient from '@/lib/graphCMSMutationClient.js';
 import { UpdateAuctionEndDateQuery, PublishAuctionQuery } from '@/queries/auctions';
 
-export default async (req, res) => {
+const updateAuctionEndDate = async (req, res) => {
   // TODO: Needs testing, hasn't been used yet
   console.log('LOG: updateAuctionEndDate', req);
   try {
@@ -22,3 +22,5 @@ export default async (req, res) => {
     });
   }
 };
+
+export default updateAuctionEndDate;
