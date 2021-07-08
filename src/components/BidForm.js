@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BidsByAuctionId } from '@/queries/bids';
 import { mutate } from 'swr';
 import { useForm } from 'react-hook-form';
@@ -5,7 +6,12 @@ import { differenceInMinutes } from 'date-fns';
 import { inRange } from 'lodash';
 
 const BidForm = ({ user, auction, player, playerHighestBid }) => {
-  const { handleSubmit, register, formState: { errors } } = useForm();
+  const [bidLoading, setBidLoading] = useState(false);
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
 
   const onSubmit = async (formData, e) => {
     const auctionTimeLeft = differenceInMinutes(Date.now(), new Date(auction.endDate));
@@ -18,6 +24,7 @@ const BidForm = ({ user, auction, player, playerHighestBid }) => {
           const userId = user.sub;
 
           try {
+            setBidLoading(true);
             const { bid } = await fetch('/api/graphcms/createAuctionBid', {
               method: 'POST',
               headers: {
@@ -30,6 +37,7 @@ const BidForm = ({ user, auction, player, playerHighestBid }) => {
                 userId: userId,
               }),
             }).then((res) => res.json());
+            setBidLoading(false);
 
             if (inRange(auctionTimeLeft, -3, 0)) {
               updateAuctionEndDate();
@@ -39,6 +47,7 @@ const BidForm = ({ user, auction, player, playerHighestBid }) => {
               bids: [...bids, { ...bid }],
             };
           } catch (error) {
+            setBidLoading(false);
             console.error('LOG: bid submit failed', error);
             return {
               status: 'bid failed',
@@ -49,6 +58,7 @@ const BidForm = ({ user, auction, player, playerHighestBid }) => {
       );
       e.target.reset(); // reset the form value
     } catch (error) {
+      setBidLoading(false);
       alert('ERROR SUBMITTING BID!', error);
     }
   };
@@ -57,16 +67,15 @@ const BidForm = ({ user, auction, player, playerHighestBid }) => {
     console.log('LOG: add 3 minutes to auction end date');
   };
 
-  console.log('LOG: BidForm', playerHighestBid, errors);
-
   const minBid = playerHighestBid + 0.25;
+  const placeholder = bidLoading ? '' : minBid;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <input
         step={0.25}
         min={minBid}
-        placeholder={minBid}
+        placeholder={placeholder}
         type="number"
         name="amount"
         {...register('amount', { min: minBid })}

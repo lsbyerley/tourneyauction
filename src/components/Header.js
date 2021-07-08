@@ -30,7 +30,7 @@ const Header = ({ user }) => {
             <div className="flex justify-between h-16">
               <div className="flex">
                 <Link href="/">
-                  <a className="relative flex items-center flex-shrink-0 w-40 h-8">
+                  <a className="relative flex-shrink-0 w-40 h-8">
                     <Image src="/gta-logo.png" alt="tourney-auction" layout="fill" objectFit="contain" />
                   </a>
                 </Link>
@@ -104,7 +104,9 @@ const Header = ({ user }) => {
                             onClick={() => setOpen(true)}
                           >
                             <span className="sr-only">Open user menu</span>
-                            <Image className="w-8 h-8 rounded-full" src={user.picture} alt="" />
+                            <div className="relative w-8 h-8">
+                              <Image className="rounded-full" src={user.picture} alt="" layout="fill" objectFit="contain" />
+                            </div>
                           </Menu.Button>
                         </div>
                         <Transition
@@ -180,7 +182,9 @@ const Header = ({ user }) => {
               <div className="pt-4 pb-3 border-t border-gray-200">
                 <div className="flex items-center px-4">
                   <div className="flex-shrink-0">
-                    <Image className="w-10 h-10 rounded-full" src={user.picture} alt="" />
+                    <div className="relative w-10 h-10">
+                      <Image className="rounded-full" src={user.picture} alt="" layout="fill" objectFit="contain" />
+                    </div>
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium text-gray-800">{user.name}</div>
