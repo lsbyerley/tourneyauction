@@ -4,16 +4,14 @@
 // -----------------------------------------
 
 export const fetchPlayerList = async () => {
-  const playerRes = await fetch(
-    'https://www.usopen.com/bin/usopen/players.json'
-  ).then((res) => res.json());
+  const playerRes = await fetch('https://www.usopen.com/bin/usopen/players.json').then((res) => res.json());
   const players = playerRes.map((p) => {
     return `${p.firstName} ${p.lastName}`;
   });
   console.log('LOG: playerRes', JSON.stringify(players));
 };
 
-const players = [
+const playerList = [
   'Brooks Koepka',
   'Dustin Johnson',
   'Rory McIlroy',
@@ -171,4 +169,4 @@ const players = [
   'Will Zalatoris',
 ];
 
-export default players;
+export default playerList;

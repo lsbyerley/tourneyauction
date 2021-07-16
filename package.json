@@ -1,5 +1,5 @@
 {
-  "name": "golftourneyauction",
+  "name": "tourneyauction",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,9 @@
     "package:update:check": "ncu",
     "package:update:install": "ncu -u; npm install",
     "package:update:int": "ncu -i",
-    "lint": "next lint"
+    "lint": "next lint",
+    "addPlayers": "node ./scripts/createPlayerPool.mjs",
+    "type": "module"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "1.4.2",

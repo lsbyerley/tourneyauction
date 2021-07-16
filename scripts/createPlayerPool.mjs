@@ -1,20 +1,19 @@
 import dotenv from 'dotenv';
 dotenv.config({ path: './.env.local' });
 import fetch from 'isomorphic-fetch';
-import players from './2021usopen.mjs';
+import playerList, { fetchPlayerList } from './2021openchamp.mjs';
 
-const upsertPlayers = async ({ playerName, auctionId, sportId }) => {
-  try {
-    // CREATE THE PLAYER
-    const createRes = await fetch(process.env.NEXT_PUBLIC_GRAPHCMS_URL, {
-      headers: {
-        Authorization: `Bearer ${process.env.GRAPHCMS_MUTATION_TOKEN}`,
-        'content-type': 'application/json',
-      },
-      method: 'POST',
-      mode: 'cors',
-      body: JSON.stringify({
-        query: `
+const createPlayerMutation = async ({ auctionId, sportId, playerName }) => {
+  // CREATE THE PLAYER
+  const createRes = await fetch(process.env.NEXT_PUBLIC_GRAPHCMS_URL, {
+    headers: {
+      Authorization: `Bearer ${process.env.GRAPHCMS_MUTATION_TOKEN}`,
+      'content-type': 'application/json',
+    },
+    method: 'POST',
+    mode: 'cors',
+    body: JSON.stringify({
+      query: `
         mutation CreatePlayer {
           createPlayer(
             data: {
@@ -28,23 +27,28 @@ const upsertPlayers = async ({ playerName, auctionId, sportId }) => {
           }
         }
       `,
-      }),
-    });
+    }),
+  });
 
-    const createData = await createRes.json();
-    const playerId =
-      createData?.data.createPlayer.id || 'created player not found';
+  const { data, errors } = await createRes.json();
+  if (errors) {
+    console.log('LOG: createError', errors);
+  }
+  const playerId = data?.createPlayer?.id || null;
+  return playerId;
+};
 
-    // PUBLISH THE PLAYER
-    const publishRes = await fetch(process.env.NEXT_PUBLIC_GRAPHCMS_URL, {
-      headers: {
-        Authorization: `Bearer ${process.env.GRAPHCMS_MUTATION_TOKEN}`,
-        'content-type': 'application/json',
-      },
-      method: 'POST',
-      mode: 'cors',
-      body: JSON.stringify({
-        query: `
+const publishPlayerMutation = async ({ playerId }) => {
+  // PUBLISH THE PLAYER
+  const publishRes = await fetch(process.env.NEXT_PUBLIC_GRAPHCMS_URL, {
+    headers: {
+      Authorization: `Bearer ${process.env.GRAPHCMS_MUTATION_TOKEN}`,
+      'content-type': 'application/json',
+    },
+    method: 'POST',
+    mode: 'cors',
+    body: JSON.stringify({
+      query: `
         mutation PublishPlayer {
           publishPlayer(where: { id: "${playerId}" }) {
             id
@@ -52,29 +56,46 @@ const upsertPlayers = async ({ playerName, auctionId, sportId }) => {
           }
         }
       `,
-      }),
-    });
+    }),
+  });
 
-    const publishData = await publishRes.json();
-    const publishedPlayer =
-      publishData?.data?.publishPlayer || 'publish player not found';
+  const { data, errors } = await publishRes.json();
+  if (errors) {
+    console.log('LOG: publishError', errors);
+  }
+  const publishedPlayer = data?.publishPlayer || -1;
+  return publishedPlayer;
+};
+
+const upsertPlayer = async ({ playerName, auctionId, sportId }) => {
+  try {
+    const createdPlayerId = await createPlayerMutation({ auctionId, sportId, playerName });
+    const publishedPlayer = await publishPlayerMutation({ playerId: createdPlayerId });
     return publishedPlayer;
   } catch (err) {
     console.error('LOG: player upsert error', err);
-    return err;
   }
 };
 
 const go = async () => {
   console.log('LOG: creating player pool...');
 
+  let players;
+  if (!playerList || playerList.length === 0) {
+    players = await fetchPlayerList();
+  } else {
+    players = playerList;
+  }
+
   try {
     const playerNames = players;
-    const auctionId = 'ckpjwix1c4kiz0b85soqy5y9d';
+    const auctionId = 'ckqntktk8uut00d82lp6p3cwg';
     const sportId = 'cknjqgv8wo8ey0c86o4wf9umd';
 
+    // TODO: Throttle this to about 5 mutation requests per second
     const promises = playerNames.map((p) => {
-      return upsertPlayers({ playerName: p, auctionId, sportId });
+      return new Promise((resolve) => resolve(`LOG: test run, uncomment next line ${p} - ${auctionId} - ${sportId}`));
+      // return upsertPlayer({ playerName: p, auctionId, sportId });
     });
 
     const settledPromises = await Promise.allSettled(promises);
@@ -84,4 +105,4 @@ const go = async () => {
   }
 };
 
-// go();
+go();
